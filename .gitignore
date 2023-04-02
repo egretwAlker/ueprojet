@@ -1,3 +1,10 @@
+# ---
+*.bson
+*.json
+*.metadata.json
+*.swp
+# ---
+
 *.bundle.*
 lib/
 node_modules/
