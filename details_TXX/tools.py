@@ -4,7 +4,7 @@ import json
 def categories_description_pairs(fn):
   with open(fn) as f:
     data = [json.loads(s) for s in f.readlines()]
-  return [(d['categories'], d['description']) for d in data]
+  return [(d['categories'].split('|'), d['description']) for d in data if len(d['categories'])>0]
 
 def test():
   d = categories_description_pairs("details.json")
