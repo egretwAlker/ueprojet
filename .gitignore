@@ -3,6 +3,7 @@
 *.json
 *.metadata.json
 *.swp
+latex-compiled
 # ---
 
 *.bundle.*
