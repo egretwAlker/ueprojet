@@ -13,6 +13,7 @@ language correspond au langage des "stopwords", à écrire en anglais.
 
 Conditions:
 Retirer N/A values
+df correspond à la colonne de texte uniquement
 
 
 Exemple:
