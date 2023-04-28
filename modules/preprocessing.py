@@ -44,9 +44,10 @@ def show_popular_words(df, most_common_nb):
     df = df.astype('string')
     words = ' '.join([str(i) for i in df]).split()
     counter_words = Counter(words)
-    counter_words.most_common(most_common_nb)
     wordcloud = WordCloud(width = 1000, height = 500).generate_from_frequencies(counter_words)
     plt.imshow(wordcloud)
+    plt.show()
+    return counter_words.most_common(most_common_nb)
 
 
 def reg_length(x):
