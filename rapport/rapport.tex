@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{physics}
+\usepackage{stmaryrd}
+\usepackage{bbm}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    }
+\usepackage{biblatex}
+\addbibresource{refs.bib}
+
+\begin{document}
+
+\tableofcontents
+
+\section{Corpus to vectors}
+
+\subsection{Preprocessing}
+
+\subsection{One hot pot}
+
+\subsection{Bag of Words}
+
+\subsection{tf-idf}
+
+The BoW (Bag of Words) model assumes that the importance of a term is directly proportional to
+the number of its appearance in the document, this can easily be misleading
+when the most common words are `stopwords'.
+
+tf-idf (term frequency - inverse document frequency) first consider
+the whole of corpus, it assumes a term too frequent in a corpus has little
+information. Then it considers the importance of a term in a document
+as the frequency of the term in this document times a coefficient
+representing its information in the corpus.
+
+$$
+\begin{aligned}
+\mathrm{tfidf}(\mathrm{term}) & = \mathrm{tf}(\mathrm{term}) \times \mathrm{idf}(\mathrm{term}) \\
+\mathrm{tf}(\mathrm{term}) & = \frac{\# \text { of times term appears in document }}{\# \text { of terms in document }} \\
+\mathrm{idf}(\mathrm{term}) & =\ln \left(\frac{\# \text { of documents }}{\# \text { of documents in corpus with term }}\right)
+\end{aligned}
+$$
+
+Other possible choices:
+
+\begin{itemize}
+  \item A term can be many (succesive) words (n-gram) (e.g. to
+  take into account of negations before a word)
+  \item The exact formulae can be changed while the same idea remains
+\end{itemize}
+
+\paragraph{On the implementation} Il faut éviter utiliser \verb|for|, et
+utiliser les fonctions numpy à la place; on utilise les matrices sparse pour
+gagner de la mémoire et parfois l'éfficacité.
+
+\paragraph{Observations}
+\begin{itemize}
+  \item Curse of dimensionality
+  \item Preprocessing is important
+\end{itemize}
+
+\section{Treating vectors}
+
+\subsection{Distances}
+
+We can use euclidean distance, or we can use the distance concerning
+only the angle between 2 vectors (so the `difference of lengths' of documents
+is ignored).
+
+$$
+\begin{aligned}
+&\text{(cosine similarity)}S(A, B) :=
+\cos (\theta)=\frac{A \cdot B}{\|A\|\|B\|}\\
+&\text{(cosine distance)}D(A, B) :=1-S(A, B)
+\end{aligned}
+$$
+
+\subsection{Dimensionality reduction}
+
+\begin{itemize}
+  \item PCA (not useful in NLP?)
+  \item t-SNE (only useful for visulization?)
+\end{itemize}
+
+\subsection{Topological data analysis}
+
+Try citation \cite{Zhu_2013}
+
+\printbibliography
+
+\end{document}

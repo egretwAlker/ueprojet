@@ -20,20 +20,24 @@ def my_split(docs : list[str]) -> list[list[str]]:
 
 # O(nm log(nm))
 def tfidf(docs : list[list[str]]) -> tuple[list[str], np.ndarray, list[np.ndarray]]:
+  '''
+  Take a list of list of words, return a tuple of (the dictionary, idf, tfidf)
+  '''
   words = []
   for doc in docs:
       words.extend(doc)
   words = np.unique(words)
-  lk = dict(zip(words, range(len(words))))
+
+  lk = dict(zip(words, range(len(words)))) # word to id
   tf = np.zeros((len(docs), len(words)), dtype=np.float64)
   for i, doc in enumerate(docs):
       indices, counts = np.unique([lk[term] for term in doc], return_index=True)
       tf[i, indices] = counts/len(doc)
 
-  df = np.zeros((len(words),), dtype=np.float64)
+  dc = np.zeros((len(words),), dtype=np.float64)
   for doc in docs:
-      df[np.unique([lk[term] for term in doc])] += 1
-  idf = np.log(len(docs) / df)
+      dc[np.unique([lk[term] for term in doc])] += 1
+  idf = np.log(len(docs) / dc)
 
   tfidf = tf * idf
   return words, idf, tfidf

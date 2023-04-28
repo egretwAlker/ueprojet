@@ -4,6 +4,7 @@
 *.metadata.json
 *.swp
 latex-compiled
+meine
 # ---
 
 *.bundle.*
