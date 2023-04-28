@@ -31,10 +31,10 @@ The BoW (Bag of Words) model assumes that the importance of a term is directly p
 the number of its appearance in the document, this can easily be misleading
 when the most common words are `stopwords'.
 
-tf-idf (term frequency - inverse document frequency) first consider
-the whole of corpus, it assumes a term too frequent in a corpus has little
+tf-idf (term frequency - inverse document frequency) first considers
+the whole of a corpus, it assumes a term too frequent in the corpus has little
 information. Then it considers the importance of a term in a document
-as the frequency of the term in this document times a coefficient
+as the frequency of the term in this document times a scalar
 representing its information in the corpus.
 
 $$
