@@ -19,3 +19,12 @@ def note_short_pairs(fn):
   with open(fn) as f:
     data = [json.loads(s) for s in f.readlines()]
   return [(getNote(d['note']), d['title_review']) for d in data if 'comment' in d and 'note' in d and len(d['title_review']) > 0]
+
+def dedup(pairs):
+  s = set()
+  res = []
+  for p in pairs:
+    if p[1] not in s:
+      res.append(p)
+      s.add(p[1])
+  return res
