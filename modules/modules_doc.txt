@@ -1,0 +1,46 @@
+
+DOCUMENTATION
+
+! Il faut importer les fonctions pour les appeler !
+
+preprocessing.py
+def preprocess(df, language)
+--------------------------------------------
+
+Effectue le preprocessing de df dans la language language.
+df doit correspondre a une colonne.
+language correspond au langage des "stopwords", à écrire en anglais.
+
+Conditions:
+Retirer N/A values
+
+
+Exemple:
+
+from projet_sem3 import preprocessing
+avis_df = pd.read_csv('data/avis.csv')
+avis_df_treated = avis_df.dropna(inplace=False)
+X, y = avis_df_treated.drop(['note'], axis=1), avis_df_treated['note']
+X['comment'] = preprocessing.preprocess(X['comment'] ,"french")
+
+def show_popular_words(df, most_common_nb):
+--------------------------------------------
+
+Affiche les mots les plus populaires de df sous la forme d'un WordCloud.
+
+df correspond à une colonne de texte et most_common_nb la taille du classement des mots les plus populaires à renvoyer.
+
+Conditions:
+df est preprocessed.
+
+Exemple: 
+
+most_common  = preprocessing.show_popular_words(X['comment'], 20)
+print(most_common)
+
+
+
+
+
+
+
