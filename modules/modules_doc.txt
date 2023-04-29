@@ -40,6 +40,21 @@ most_common  = preprocessing.show_popular_words(X['comment'], 20)
 print(most_common)
 
 
+def get_most_common_words(df, n):
+--------------------------------------------
+
+Retourne les n mots les plus populaires de df sous forme de liste.
+
+Conditions: df correspond à la colonne de texte uniquement.
+Il faut retirer les N/A values avant d'appeler la fonction.
+
+Exemple:
+X_prep_stem = pd.read_csv('data/files/X_prep_stemm_unique')
+X_prep_stem = X_prep_stem.dropna(inplace=False)
+popular_words = preprocessing.get_most_common_words(X_prep_stem, 20000)
+
+
+
 
 
 
