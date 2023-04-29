@@ -12,7 +12,7 @@ def preprocess(s, lang, remove_stop_words):
   return the cleaned token list(s)
   '''
   if(type(s) == str):
-    tokens = re.sub(r'[^\w]', ' ', s).lower().split()
+    tokens = re.sub(r'[^\w]|[\d]', ' ', s).lower().split()
 
     stemmer = SnowballStemmer(lang, ignore_stopwords=False)
     tokens = [stemmer.stem(token) for token in tokens]
@@ -42,25 +42,39 @@ def connected_components_under_dist(X : csr_matrix, dist_lim : float, metric):
   return csgraph.connected_components(G)
 
 # O(nm log(nm))
-def tfidf(docs : list[list[str]]) -> tuple[list[str], np.ndarray, list[np.ndarray]]:
+def tfidf(docs : list[list[str]]) -> np.ndarray:
   '''
   Take a list of lists of words, return a tuple of (the dictionary, idf, tfidf)
   '''
-  words = []
-  for doc in docs:
-      words.extend(doc)
-  words = np.unique(words)
+  tf = bag_of_words(docs)
 
-  lk = dict(zip(words, range(len(words)))) # word to id
-  tf = np.zeros((len(docs), len(words)), dtype=np.float64)
-  for i, doc in enumerate(docs):
-      indices, counts = np.unique([lk[term] for term in doc], return_index=True)
-      tf[i, indices] = counts/len(doc)
-
-  dc = np.zeros((len(words),), dtype=np.float64)
-  for doc in docs:
-      dc[np.unique([lk[term] for term in doc])] += 1
+  dc = np.zeros((tf.shape[1],), dtype=np.float64)
+  for i in range(tf.shape[0]):
+    dc[np.where(tf[i] > 0)] += 1
   idf = np.log(len(docs) / dc)
 
+  for i in range(dc.shape[0]):
+    if dc[i] == 0.0:
+      print(i)
+
+  for i, doc in enumerate(docs):
+    tf[i] /= len(doc)
+
   tfidf = tf * idf
-  return words, idf, tfidf
+  return tfidf
+
+def bag_of_words(docs : list[list[str]]) -> np.ndarray:
+  terms = []
+  for doc in docs:
+    terms.extend(doc)
+  terms = np.unique(terms)
+
+  lk = dict(zip(terms, range(len(terms)))) # word to id
+  tc = np.zeros((len(docs), len(terms)), dtype=np.float64)
+  for i, doc in enumerate(docs):
+    indices, counts = np.unique([lk[term] for term in doc], return_counts=True)
+    tc[i, indices] = counts
+    # if i == 5369:
+    #   print(indices, counts)
+    #   print(tc[i, 123])
+  return tc
