@@ -25,6 +25,15 @@ avis_df_treated = avis_df.dropna(inplace=False)
 X, y = avis_df_treated.drop(['note'], axis=1), avis_df_treated['note']
 X['comment'] = preprocessing.preprocess(X['comment'] ,"french")
 
+Pour charger les y:
+X_prep_stem_unique = pd.read_csv('data/files/X_prep_stemm_unique')
+X_prep_stem_dup = pd.read_csv('data/files/X_prep_stemm_dup')
+
+X_prep_stem_unique = X_prep_stem_unique.dropna(inplace=False)
+X_prep_stem_dup = X_prep_stem_dup.dropna(inplace=False)
+
+y = y[y.index.isin(X_prep_stem_dup.index)]
+
 def show_popular_words(df, most_common_nb):
 --------------------------------------------
 
