@@ -1,7 +1,8 @@
 
 DOCUMENTATION
 
-! Il faut importer les fonctions pour les appeler !
+PREPROCESSING
+----------------------------------------------------------------------------------------
 
 preprocessing.py
 def preprocess(df, language)
@@ -54,6 +55,23 @@ X_prep_stem = X_prep_stem.dropna(inplace=False)
 popular_words = preprocessing.get_most_common_words(X_prep_stem, 20000)
 
 
+
+TEXT REPRESENTATION
+----------------------------------------------------------------------------------------
+
+
+def count_vector_encode(com_words, sentence, count_matrix, row_index):
+--------------------------------------------
+
+Fonction permettant de transformer un dataframe en une matrice de word embeddings (en  passant par apply)
+
+Exemple:
+
+count_matrix = np.zeros((X_prep_stem_dup['comment'].shape[0], len(popular_words)))
+X_prep_stem_dup = X_prep_stem_dup.reset_index(drop=True)
+
+X_prep_stem_dup['row_index'] = X_prep_stem_dup.index
+X_prep_stem_dup.progress_apply(lambda x: count_vector_encode(popular_words, x.comment, count_matrix, x.row_index), axis=1)
 
 
 
