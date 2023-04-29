@@ -14,6 +14,12 @@ from collections import Counter
 from nltk.corpus import stopwords
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+from nltk.stem.snowball import SnowballStemmer
+from collections import Counter
+from tqdm import tqdm
+ 
+#the stemmer requires a language parameter
+snow_stemmer = SnowballStemmer(language='french')
         
 def preprocess(df, language):
     stopwords_ = stopwords.words(language)
@@ -39,6 +45,55 @@ def preprocess(df, language):
     r = r.apply(unidecode.unidecode)
     return r
 
+def preprocess_libraries(df, language, remove_duplicates):
+    r = df.str.lower()
+    r = r.str.replace("'", ' ')
+    r = r.apply(lambda x:remove_punctuation(x))
+    STOPWORDS = set(stopwords.words('french'))
+    r = r.apply(lambda text: remove_stopwords(text, STOPWORDS))
+    r = r.apply(unidecode.unidecode)
+    r = r.apply(reg_length)
+    r = r.apply(reg_nb)
+    r = r.apply(reg_spaces)
+    
+    snow_stemmer = SnowballStemmer(language='french')
+    r = r.apply(lambda x: stem_words(x, snow_stemmer))
+    if remove_duplicates:
+        r = r.apply(remov_duplicates)
+    return r
+    
+    
+def get_most_common_words(df, n):
+    results = Counter()
+    df = df.dropna(inplace=False)
+    df['comment'].str.split().apply(results.update)
+    popular_words = sorted(results, key = results.get, reverse = True)[:n]
+    return popular_words
+    
+def remov_duplicates(input):
+ 
+    # split input string separated by space
+    input = input.split(" ")
+ 
+    # now create dictionary using counter method
+    # which will have strings as key and their
+    # frequencies as value
+    UniqW = Counter(input)
+ 
+    # joins two adjacent elements in iterable way
+    return " ".join(UniqW.keys())
+    
+def stem_words(x, snow_stemmer):
+    return " ".join([snow_stemmer.stem(word) for word in x.split()])
+    
+PUNCT_TO_REMOVE = string.punctuation
+def remove_punctuation(text):
+    """custom function to remove the punctuation"""
+    return text.translate(str.maketrans('', '', PUNCT_TO_REMOVE))
+
+def remove_stopwords(text, STOPWORDS):
+    """custom function to remove the stopwords"""
+    return " ".join([word for word in str(text).split() if word not in STOPWORDS])
 
 def show_popular_words(df, most_common_nb):
     df = df.astype('string')
@@ -49,14 +104,14 @@ def show_popular_words(df, most_common_nb):
     plt.show()
     return counter_words.most_common(most_common_nb)
 
-
+# on retire les mots de longueur <= 3
 def reg_length(x):
     try:
         return re.sub(r'\b\w{1,3}\b', '', x)
     except:
         return x
     
-    
+# on retire les whitespaces
 def reg_spaces(x):
     try: 
         return re.sub(' +', ' ', x)
@@ -64,6 +119,7 @@ def reg_spaces(x):
         return x
     
     
+# on retire les nombres
 def reg_nb(x):
     try:
         return re.sub('\d', ' ', x)
