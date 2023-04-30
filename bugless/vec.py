@@ -5,19 +5,20 @@ import re
 from nltk.stem import SnowballStemmer
 from nltk.corpus import stopwords
 
-# Problems?: aimer -> aim in stemming
+# Problems?: aimer -> aim in stemming, pas est un stopword
 def preprocess(s, lang, remove_stop_words):
   '''
   s being a corpus or a document
   return the cleaned token list(s)
   '''
   if(type(s) == str):
-    tokens = re.sub(r'[^\w]|[\d]', ' ', s).lower().split()
+    tokens = re.sub(r'[^A-Za-zÀ-ÖØ-öø-ÿ]', ' ', s).lower().split()
 
     stemmer = SnowballStemmer(lang, ignore_stopwords=False)
     tokens = [stemmer.stem(token) for token in tokens]
     if remove_stop_words:
       stop = set(stopwords.words(lang))
+      stop.remove('pas')
       tokens = [token for token in tokens if token not in stop]
 
     return tokens
@@ -69,12 +70,10 @@ def bag_of_words(docs : list[list[str]]) -> np.ndarray:
     terms.extend(doc)
   terms = np.unique(terms)
 
-  lk = dict(zip(terms, range(len(terms)))) # word to id
+  lk = dict(zip(terms, range(len(terms))))
   tc = np.zeros((len(docs), len(terms)), dtype=np.float64)
   for i, doc in enumerate(docs):
     indices, counts = np.unique([lk[term] for term in doc], return_counts=True)
-    tc[i, indices] = counts
-    # if i == 5369:
-    #   print(indices, counts)
-    #   print(tc[i, 123])
+    if len(indices) > 0:
+      tc[i, indices] = counts
   return tc
