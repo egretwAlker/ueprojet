@@ -96,6 +96,24 @@ Try citation \cite{Zhu_2013}
 
 \subsection{k nearest neighbour}
 
+One predict the information associated with a vector by the majority
+of information associated with its neighbours (within k nearest).
+
+\paragraph{On implementation} \begin{itemize}
+  \item We favor the nearer information when there is a tie.
+  \item Python is not a well typed language, it is so easy to have
+  ridiculous bugs.
+  \item cosine distance works much better than euclidean distance.
+\end{itemize}
+
+\paragraph{Positive} \begin{itemize}
+  \item Easy to implement
+\end{itemize}
+
+\paragraph{Negative} \begin{itemize}
+  \item Supervised
+\end{itemize}
+
 \subsection{Perceptron}
 
 \paragraph{On the implementation}
