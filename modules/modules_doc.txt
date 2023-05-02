@@ -83,6 +83,35 @@ X_prep_stem_dup['row_index'] = X_prep_stem_dup.index
 X_prep_stem_dup.progress_apply(lambda x: count_vector_encode(popular_words, x.comment, count_matrix, x.row_index), axis=1)
 
 
+CLASSIFICATION
+----------------------------------------------------------------------------------------
+
+def naive_bayes_train(X, parameters_pos, parameters_neg): 
+--------------------------------------------
+
+Exemple: 
+
+df_stopwords = pd.read_csv('data/files/data_preprocess_avec_stopwords.csv')
+df_wo_stopwords = pd.read_csv('data/files/data_preprocess_sans_stopwords.csv')
+
+df_stopwords = df_stopwords.dropna(inplace=False)
+df_wo_stopwords = df_wo_stopwords.dropna(inplace=False)
+
+df_stopwords = df_stopwords.reset_index(drop=True)
+df_wo_stopwords = df_wo_stopwords.reset_index(drop=True)
+
+df_stopwords['positive'] = df_stopwords['note'] > 5.0
+df_wo_stopwords['positive'] = df_wo_stopwords['note'] > 5.0
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(df_wo_stopwords['comment'], df_wo_stopwords['positive'])
+
+p_pos, p_neg, parameters_pos, parameters_neg = class.naive_bayes_train(X_train, y_train, parameters_pos, parameters_neg)
+
+results = pd.DataFrame()
+results['predicted'] = X_train.apply(lambda x: class.classify_review(x, p_pos, p_neg, parameters_pos, parameters_neg)
+
+
 
 
 
