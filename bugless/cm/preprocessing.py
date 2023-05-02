@@ -6,13 +6,12 @@ import string
 import re
 from unidecode import unidecode
 import itertools
-import cleantext
 import nltk
 import unicodedata
 import unidecode
 from collections import Counter
 from nltk.corpus import stopwords
-from wordcloud import WordCloud
+# from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.stem.snowball import SnowballStemmer
 from collections import Counter
@@ -97,14 +96,14 @@ def remove_stopwords(text, STOPWORDS):
     """custom function to remove the stopwords"""
     return " ".join([word for word in str(text).split() if word not in STOPWORDS])
 
-def show_popular_words(df, most_common_nb):
-    df = df.astype('string')
-    words = ' '.join([str(i) for i in df]).split()
-    counter_words = Counter(words)
-    wordcloud = WordCloud(width = 1000, height = 500).generate_from_frequencies(counter_words)
-    plt.imshow(wordcloud)
-    plt.show()
-    return counter_words.most_common(most_common_nb)
+# def show_popular_words(df, most_common_nb):
+#     df = df.astype('string')
+#     words = ' '.join([str(i) for i in df]).split()
+#     counter_words = Counter(words)
+#     wordcloud = WordCloud(width = 1000, height = 500).generate_from_frequencies(counter_words)
+#     plt.imshow(wordcloud)
+#     plt.show()
+#     return counter_words.most_common(most_common_nb)
 
 # on retire les mots de longueur <= 3
 def reg_length(x):
@@ -137,17 +136,3 @@ def stopwords_processing(x, stopwords):
     except Exception as e:
         print(e)
         return x
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

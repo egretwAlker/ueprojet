@@ -1,4 +1,3 @@
-
 from tqdm import tqdm
 tqdm.pandas()
 import matplotlib.pyplot as plt
@@ -25,14 +24,13 @@ def naive_bayes_train(X, y, parameters_pos, parameters_neg):
     parameters_neg = {word:0 for word in vocab}
     
     for word in tqdm(vocab):
-    n_word_given_pos = vocab_counts.loc[y_train == True, word].sum()
-    n_word_given_neg = vocab_counts.loc[y_train == False, word].sum()
+        n_word_given_pos = vocab_counts.loc[y_train == True, word].sum()
+        n_word_given_neg = vocab_counts.loc[y_train == False, word].sum()
     
     parameters_pos[word] = (n_word_given_pos + alpha) / (n_pos + alpha * n_vocab)
     parameters_neg[word] = (n_word_given_neg + alpha) / (n_neg + alpha * n_vocab)
     
     return p_pos, p_neg, parameters_pos, parameters_neg
-    
     
 def classify_review(x, p_pos, p_neg, parameters_pos, parameters_neg):
     p_pos_given = p_pos
@@ -49,5 +47,3 @@ def classify_review(x, p_pos, p_neg, parameters_pos, parameters_neg):
         return 1
     else: 
         return 0
-    
-    
