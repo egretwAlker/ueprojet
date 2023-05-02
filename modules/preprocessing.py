@@ -16,7 +16,9 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.stem.snowball import SnowballStemmer
 from collections import Counter
+
 from tqdm import tqdm
+tqdm.pandas()
  
 #the stemmer requires a language parameter
 snow_stemmer = SnowballStemmer(language='french')
@@ -35,8 +37,7 @@ def preprocess(df, language):
     
     # on retire les nombre
     r = r.apply(reg_nb)    
-    # regex pour retirer tous les mots dont length <= 3
-    r = r.apply(reg_length)
+
     # on retire les extra spaces
     r = r.apply(reg_spaces)
     
@@ -45,21 +46,22 @@ def preprocess(df, language):
     r = r.apply(unidecode.unidecode)
     return r
 
-def preprocess_libraries(df, language, remove_duplicates):
+def preprocess_libraries(df, language, remove_duplicates, remove_stopwords_):
     r = df.str.lower()
-    r = r.str.replace("'", ' ')
-    r = r.apply(lambda x:remove_punctuation(x))
-    STOPWORDS = set(stopwords.words('french'))
-    r = r.apply(lambda text: remove_stopwords(text, STOPWORDS))
-    r = r.apply(unidecode.unidecode)
-    r = r.apply(reg_length)
+    #r = r.str.replace("'", ' ')
+    r = r.progress_apply(lambda x:remove_punctuation(x))
+    if remove_stopwords_:
+        STOPWORDS = set(stopwords.words('french'))
+        r = r.progress_apply(lambda text: remove_stopwords(text, STOPWORDS))
+    r = r.progress_apply(unidecode.unidecode)
+    
     r = r.apply(reg_nb)
     r = r.apply(reg_spaces)
     
     snow_stemmer = SnowballStemmer(language='french')
-    r = r.apply(lambda x: stem_words(x, snow_stemmer))
+    r = r.progress_apply(lambda x: stem_words(x, snow_stemmer))
     if remove_duplicates:
-        r = r.apply(remov_duplicates)
+        r = r.progress_apply(remov_duplicates)
     return r
     
     
