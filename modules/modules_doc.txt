@@ -49,6 +49,9 @@ Exemple:
 most_common  = preprocessing.show_popular_words(X['comment'], 20)
 print(most_common)
 
+def preprocess_libraries(df, language, remove_duplicates, remove_stopwords_):
+--------------------------------------------
+
 
 def get_most_common_words(df, n):
 --------------------------------------------
