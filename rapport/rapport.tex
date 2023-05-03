@@ -17,6 +17,19 @@
 
 \tableofcontents
 
+\section{Motivation}
+
+\section{Analysis on the data}
+
+\subsection{Game score - comment}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[height=4cm]{scores.png}
+\end{figure}
+
+\subsection{Game type - description}
+
 \section{Corpus to vectors}
 
 \subsection{Preprocessing}
@@ -105,7 +118,7 @@ Try citation \cite{Zhu_2013}
 One predict the information associated with a vector by the majority
 of information associated with its neighbours (within k nearest).
 
-\paragraph{On implementation} \begin{itemize}
+\paragraph{On the implementation} \begin{itemize}
   \item We favor the nearer information when there is a tie.
   \item Python is not a well typed language, it is so easy to have
   ridiculous bugs.
@@ -130,6 +143,14 @@ accuracy.
 \paragraph{On the implementation}
 % \begin{itemize}
 % \end{itemize}
+
+\section{Testing and evalutation of models}
+
+\paragraph{On the implementation} \begin{itemize}
+  \item Use the same seed.
+  \item Balance the numbers of negatives and positives.
+  \item Choose 2 extremities.
+\end{itemize}
 
 \printbibliography
 
