@@ -37,7 +37,28 @@
 Stopwords are commonly used words in a language that are considered to have little or no significance in determining the meaning of a text.
 `not' is not a stopword.
 
-\subsection{One hot pot}
+\subsection{One Hot Encoding}
+
+One Hot Encoding is a vector representation of a word in vocabulary, ie the unique list of all the words appearing in the documents.
+If the vocabulary size is n, each word in the vocabulary is therefore represented as a vector of size n. It takes binary values: 1 for the corresponding word and 0 otherwise.
+
+\paragraph{On the implementation:}
+
+We can represent the set of sentences as a tensor of shape (a, b, c) ie a matrices (number of sentences) of shape (b,c) where b represents the number of words in the sentence and c the vocabulary size.
+
+\paragraph{Advantages:}
+
+\begin{itemize}
+  \item Intuitive and easy to implement
+\end{itemize}
+
+\paragraph{Inconvenients:}
+
+\begin{itemize}
+  \item Increase in dimensionality: a large vocabulary size implies a large number of columns, taking more memory size, which results in an increase in computational cost. + The matrix is sparse.
+  \item Every vector sits in the orthogonal vector space so vectors are perpendicular to each other and are considered independent to each other, which is rarely the case.
+  \item High chance of multi-collinearity due to dummy variables, which might affect the performance of the model (cf. Dummy Variable Trap)
+\end{itemize}
 
 \subsection{Bag of Words}
 
