@@ -173,6 +173,30 @@ for each point because of the property of the algorithm (it adapts
 naturally to the data without this point), and get the expected
 accuracy.
 
+\subsection{Naive Bayes}
+
+\begin{align}
+
+Naive Bayes is a probabilistic classification algorithm.\newline
+It is called naive because it assumes that each input variable is independent.
+\newline
+
+\text{We are looking for: } \max_{y}\mathbb{P}(Y =y \mid X=(x_1, ..., x_n) \\
+
+\text{using the Naive Bayes formula: }\mathbb{P}(Y \mid X)) = \frac{\mathbb{P}(X\mid Y)\cdot \mathbb{P}(Y)}{\mathbb{P}(X)} = \frac{\mathbb{P}(Y)\prod_{i}^{}\mathbb{P}(X_i\mid Y)}{\mathbb{P}(X)} \text{by independence.}
+\\\\
+\text{where $\mathbb{P}(X\mid Y)$ is the likelihood, $\mathbb{P}(X)$ is the evidence, $\mathbb{P}(Y \mid X)$ is the posterior and $\mathbb{P}(Y)$ is the prior.}
+\end{align}
+
+
+\paragraph{Advantages} \begin{itemize}
+\item Even though the independence assumption is rarely true, the model is still effective
+\item Handles high dimensional data well
+\end{itemize}
+
+\paragraph{Inconvenients} \begin{itemize}
+\item Estimated probability is often inaccurate because of the naive assumption
+\end{itemize}
 \subsection{Perceptron}
 
 \paragraph{On the implementation}
