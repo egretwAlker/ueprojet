@@ -12,6 +12,8 @@
     }
 \usepackage{biblatex}
 \addbibresource{refs.bib}
+\usepackage{indentfirst}
+\setlength{\parindent}{0.5cm}
 
 \begin{document}
 
@@ -20,7 +22,7 @@
 \section{Motivation}
 
 We were given several datasets from the website ??? which sells a variety of board games. This website collects data for every article, such as reviews and grades posted by the users. 
-\newline\newline
+
 Our task was to treat and analyze this data to try to gain information from it. One purpose was to classify these reviews and being able to predict the sentiment of review (positive or negative). 
 
 \section{Analysis on the data}
@@ -39,12 +41,11 @@ Our task was to treat and analyze this data to try to gain information from it. 
 \subsection{Preprocessing}
 
 Raw text data might contain unwanted or unimportant text due to which our results might not give efficient accuracy, and might make it hard to understand and analyze. So, proper pre-processing must be done on raw data.
-\newline\newline
 
 We had to remove punctuation, URLs, numbers, accents, stopwords.
 Stopwords are commonly used words in a language that are considered to have little or no significance in determining the meaning of a text.
 `not' is not a stopword, because it might indicate the opposite sentiment.
-\newline\newline
+
 We also applied Stemming that reduces words to their root forms. It minimizes the confusion around words that have similar meanings and lowers the complexity of the input space. However, it comes at the cost of throwing information away.
 
 \subsection{One Hot Encoding}
@@ -175,18 +176,15 @@ accuracy.
 
 \subsection{Naive Bayes}
 
-\begin{align}
 
-Naive Bayes is a probabilistic classification algorithm.\newline
+Naive Bayes is a probabilistic classification algorithm.
 It is called naive because it assumes that each input variable is independent.
-\newline
 
-\text{We are looking for: } \max_{y}\mathbb{P}(Y =y \mid X=(x_1, ..., x_n) \\
+We are looking for: $ \max_{y}\mathbb{P}(Y =y \mid X=(x_1, ..., x_n) $
 
-\text{using the Naive Bayes formula: }\mathbb{P}(Y \mid X)) = \frac{\mathbb{P}(X\mid Y)\cdot \mathbb{P}(Y)}{\mathbb{P}(X)} = \frac{\mathbb{P}(Y)\prod_{i}^{}\mathbb{P}(X_i\mid Y)}{\mathbb{P}(X)} \text{by independence.}
-\\\\
-\text{where $\mathbb{P}(X\mid Y)$ is the likelihood, $\mathbb{P}(X)$ is the evidence, $\mathbb{P}(Y \mid X)$ is the posterior and $\mathbb{P}(Y)$ is the prior.}
-\end{align}
+using the Naive Bayes formula: $\mathbb{P}(Y \mid X)) = \frac{\mathbb{P}(X\mid Y)\cdot \mathbb{P}(Y)}{\mathbb{P}(X)} = \frac{\mathbb{P}(Y)\prod_{i}^{}\mathbb{P}(X_i\mid Y)}{\mathbb{P}(X)}$
+by independence.
+where $\mathbb{P}(X\mid Y)$ is the likelihood, $\mathbb{P}(X)$ is the evidence, $\mathbb{P}(Y \mid X)$ is the posterior and $\mathbb{P}(Y)$ is the prior.
 
 
 \paragraph{Advantages} \begin{itemize}
