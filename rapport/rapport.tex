@@ -19,6 +19,10 @@
 
 \section{Motivation}
 
+We were given several datasets from the website ??? which sells a variety of board games. This website collects data for every article, such as reviews and grades posted by the users. 
+\newline\newline
+Our task was to treat and analyze this data to try to gain information from it. One purpose was to classify these reviews and being able to predict the sentiment of review (positive or negative). 
+
 \section{Analysis on the data}
 
 \subsection{Game score - comment}
@@ -34,8 +38,14 @@
 
 \subsection{Preprocessing}
 
+Raw text data might contain unwanted or unimportant text due to which our results might not give efficient accuracy, and might make it hard to understand and analyze. So, proper pre-processing must be done on raw data.
+\newline\newline
+
+We had to remove punctuation, URLs, numbers, accents, stopwords.
 Stopwords are commonly used words in a language that are considered to have little or no significance in determining the meaning of a text.
-`not' is not a stopword.
+`not' is not a stopword, because it might indicate the opposite sentiment.
+\newline\newline
+We also applied Stemming that reduces words to their root forms. It minimizes the confusion around words that have similar meanings and lowers the complexity of the input space. However, it comes at the cost of throwing information away.
 
 \subsection{One Hot Encoding}
 
