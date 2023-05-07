@@ -56,8 +56,7 @@ def connected_components_under_dist(X : csr_matrix, dist_lim : float, metric):
   G = csr_matrix(metrics.pairwise_distances(X, metric=metric, n_jobs=-1)<dist_lim)
   return csgraph.connected_components(G)
 
-# O(nm log(nm))
-def tfidf(docs : list[list[str]]) -> np.ndarray:
+def tfidf(docs : list[list[str]]):
   '''
   Take a list of lists of words, return a tuple of (the dictionary, idf, tfidf)
   '''
@@ -68,17 +67,13 @@ def tfidf(docs : list[list[str]]) -> np.ndarray:
     dc[np.where(tf[i] > 0)] += 1
   idf = np.log(len(docs) / dc)
 
-  for i in range(dc.shape[0]):
-    if dc[i] == 0.0:
-      print(i)
-
   for i, doc in enumerate(docs):
     tf[i] /= len(doc)
 
   tfidf = tf * idf
   return tfidf
 
-def bag_of_words(docs : list[list[str]]) -> np.ndarray:
+def bag_of_words(docs : list[list[str]]):
   terms = []
   for doc in docs:
     terms.extend(doc)
