@@ -3,8 +3,10 @@
 *.json
 *.metadata.json
 *.swp
+*.tsv
 latex-compiled
 meine
+venv
 # ---
 
 *.bundle.*

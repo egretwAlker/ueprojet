@@ -1,4 +1,5 @@
 import json
+import csv
 
 def categories_description_pairs(fn):
   with open(fn) as f:
@@ -27,4 +28,13 @@ def dedup(pairs):
     if p[1] not in s:
       res.append(p)
       s.add(p[1])
+  return res
+
+def essays(fn):
+  res = []
+  with open(fn, 'r', encoding='latin-1') as f:
+    tsvreader = csv.reader(f, delimiter='\t')
+    for row in tsvreader:
+      if row[1] == '2':
+        res.append((int(row[6]), row[2]))
   return res

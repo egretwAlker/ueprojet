@@ -4,9 +4,12 @@ from sklearn import metrics
 import re
 from nltk.stem import SnowballStemmer
 from nltk.corpus import stopwords
+import gudhi
+import matplotlib.pyplot as plot
+from nltk.tokenize import sent_tokenize
 
 # Problems?: aimer -> aim in stemming, pas est un stopword
-def preprocess(s, lang, remove_stop_words):
+def preprocess(s, lang : str, remove_stop_words : bool):
   '''
   s being a corpus or a document
   return the cleaned token list(s)
@@ -18,12 +21,23 @@ def preprocess(s, lang, remove_stop_words):
     tokens = [stemmer.stem(token) for token in tokens]
     if remove_stop_words:
       stop = set(stopwords.words(lang))
-      stop.remove('pas')
+      if lang == 'french':
+        stop.remove('pas')
+      elif lang == 'english':
+        stop.remove('not')
       tokens = [token for token in tokens if token not in stop]
 
+    if len(tokens) == 0:
+      # print("What? ", s)
+      tokens.append("e")
     return tokens
   else:
-     return [preprocess(t, lang, remove_stop_words) for t in s]
+    res = []
+    for t in s:
+      t = preprocess(t, lang, remove_stop_words)
+      if len(t) > 0:
+        res.append(t)
+    return res
 
 # O(n^2 m)
 def compute_barcodes(X : csr_matrix, metric) -> np.ndarray:
@@ -77,3 +91,25 @@ def bag_of_words(docs : list[list[str]]) -> np.ndarray:
     if len(indices) > 0:
       tc[i, indices] = counts
   return tc
+
+def barcodes_in_time_skeleton(vecs : np.ndarray, visual = False):
+  distances = metrics.pairwise_distances(vecs, metric='cosine', n_jobs=-1)
+  n = distances.shape[0]
+  for i in range(n-1):
+    distances[i+1, i] = distances[i, i+1] = 0
+  rips_complex = gudhi.RipsComplex(distance_matrix = distances)
+  simplex_tree = rips_complex.create_simplex_tree(max_dimension=2)
+  diag = simplex_tree.persistence(homology_coeff_field=2, min_persistence=0)
+  if visual:
+    gudhi.plot_persistence_diagram(diag)
+    plot.show()
+  return diag
+
+def cnt_barcodes(diag, d : int) -> int:
+  return len([1 for p in diag if p[0] == d])
+
+def essay_homology(essay : str, visual = False):
+  corpus = sent_tokenize(essay)
+  corpus = preprocess(corpus, 'english', True)
+  vecs = tfidf(corpus)
+  return barcodes_in_time_skeleton(vecs, visual)
