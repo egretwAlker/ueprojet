@@ -10,7 +10,7 @@ def finalexam(labels : list[bool], vectors : csr_matrix, model, split_rate = 0.8
   train_labels, train_vectors, test_labels, test_vectors = [], [], [], []
   n = len(labels)
   for i in range(n):
-    if random.random() < 0.8:
+    if random.random() < split_rate:
       train_labels.append(labels[i])
       train_vectors.append(vectors[i])
     else:
