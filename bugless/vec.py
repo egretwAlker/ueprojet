@@ -7,8 +7,9 @@ from nltk.corpus import stopwords
 import gudhi
 import matplotlib.pyplot as plot
 from nltk.tokenize import sent_tokenize
+from sklearn.neighbors import KNeighborsClassifier
+from numpy.typing import ArrayLike, NDArray
 
-# Problems?: aimer -> aim in stemming, pas est un stopword
 def preprocess(s, lang : str, remove_stop_words : bool):
   '''
   s being a corpus or a document
@@ -49,7 +50,7 @@ def compute_barcodes(X : csr_matrix, metric) -> np.ndarray:
   deathes = [np.min([distances[i, j] for j in range(i+1, n)], initial=np.inf) for i in range(n)]
   return sorted(deathes)
 
-def connected_components_under_dist(X : csr_matrix, dist_lim : float, metric):
+def connected_components_under_dist(X : csr_matrix, dist_lim : float, metric : str):
   '''
   metric in 'cosine', 'euclidean', 'l1', 'l2'
   '''
@@ -87,7 +88,7 @@ def bag_of_words(docs : list[list[str]]):
       tc[i, indices] = counts
   return tc
 
-def barcodes_in_time_skeleton(vecs : np.ndarray, visual = False):
+def barcodes_in_time_skeleton(vecs : NDArray, visual = False):
   distances = metrics.pairwise_distances(vecs, metric='cosine', n_jobs=-1)
   n = distances.shape[0]
   for i in range(n-1):
@@ -108,3 +109,28 @@ def essay_homology(essay : str, visual = False):
   corpus = preprocess(corpus, 'english', True)
   vecs = tfidf(corpus)
   return barcodes_in_time_skeleton(vecs, visual)
+
+def myknn(labels : ArrayLike, vecs : csr_matrix, tvecs : csr_matrix,
+          balance : float, k_neighbors : int):
+  """
+  labels are bools.
+  balance is posing
+    l = min(neg.shape[0], pos.shape[0])*balance
+  as the maximum data length for one kind
+  """
+  labels = np.array(labels)
+  m = labels.shape[0]
+  neg = np.where(labels == False)[0]
+  pos = np.where(labels == True)[0]
+  l = min(neg.shape[0], pos.shape[0])*balance
+  np.random.shuffle(neg)
+  np.random.shuffle(pos)
+  pos = np.concatenate((neg[:l], pos[:l]))
+  labels = labels[pos]
+  vecs = vecs[pos]
+  knn = KNeighborsClassifier(metric="cosine", n_neighbors=k_neighbors)
+  knn.fit(vecs, labels)
+  return knn.predict(tvecs)
+
+def get_knn(balance : float, k : int):
+  return lambda a, b, c : myknn(a, b, c, balance, k)

@@ -6,7 +6,11 @@
 \usepackage{stmaryrd}
 \usepackage{bbm}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{pgfplots}
 \usepackage{minted}
+\usepackage{subcaption}
+\usepackage{graphicx}
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
@@ -152,19 +156,111 @@ bad visulization results don't necessarily mean bad classification result.
 
 \subsection{k nearest neighbour}
 
-One predict the information associated with a vector by the majority
+\paragraph{Algorithm} One predicts the information associated with a vector by the majority
 of information associated with its neighbours (within k nearest).
+We use tf-idf embedding here.
+By simple experience
+and raisonning (the length doesn't affect the positivity) as well, we chose cosine distance.
 
-For comments of notes 4~7, they are more or less neutral, we can't
-say if it is definitely positive or negative as human-being. So we choose
+For comments of grades 4 - 7, they are more or less neutral, we can't
+say if it is definitely positive or negative as human-being, so less chance
+for our more or less naïve algorithm. For this reason we chose
 to do our algorithm on comments of extremities.
+
+To begin with, we delibrately balanced the data, 50\% of positive comments (5000)
+and 50\% of negative comments (5000).
+
+By adjusting the k, we obtained such result shown in Figure~\ref{fig:knn1}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+      \begin{axis}[
+          xlabel={\textbf{k}},
+          ylabel={\textbf{Accuracy}},
+          xmin=0, xmax=5500,
+          ymin=0.6, ymax=1,
+          xtick={0,1000,2000,3000,4000,5000},
+          ytick={0.6,0.7,0.8,0.9,1},
+          legend pos=north west,
+          grid=both,
+          grid style={line width=0.2pt, draw=gray!30},
+          major grid style={line width=0.4pt,draw=gray!60},
+          height=8cm,
+      ]
+      \addplot[color=blue, mark=*] coordinates {
+          (5,0.7606)
+          (55,0.8522)
+          (500,0.857)
+          (1000,0.8332)
+          (2000,0.7932)
+          (5000,0.6984)
+      };
+      \addplot[color=red, mark=square] coordinates {
+          (5,0.691)
+          (55,0.7964)
+          (500,0.857)
+          (1000,0.8836)
+          (2000,0.908)
+          (5000,0.9378)
+      };
+      \legend{Negative Comments, Positive Comments}
+      \end{axis}
+  \end{tikzpicture}
+  \caption{k nearest neighbor on balanced data}
+  \label{fig:knn1}
+\end{figure}
+
+That was some good results. But in the reality, our data is extremely disporpotional,
+if we apply knn directly, the algorithm would predict positive almost everytime. (Although
+a positive comment has less chance to enter the neighbourhood of a negtive comment,
+there are too many of them.) Indeed, we tried and get 0.26 as accuracy for negative comments and 0.94 for
+positive comments.
+
+The accuracy in total (on the data set) was good but it was not what we are after. We would like
+$(r_p+r_n)/2$ to be big (so in the previous case it was 0.6). $r_{p/n}$ is the accuracy on the positive/negative comments.
+
+To solve this problem, we add a parameter to our algorithm: balance.
+balance is a float >= 1 meaning that we trim the list of data of one label
+of more quantity to size = balance$\times$(number of data with another label).
+
+As the Figure~\ref{fig:balancenk} shows, the balance value would
+better stay at 1 (otherwise it damages significantly
+the accuracy on the negatives) and we increase k to
+remedy the disadvantage of positive prediction.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{0.33\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{balancek5.png}
+    \caption{k=5}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[t]{0.33\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{balancek50.png}
+    \caption{k=50}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.33\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{balancek500.png}
+    \caption{k=500}
+  \end{subfigure}
+  \caption{Figure with Multiple Images}
+  \label{fig:balancenk}
+\end{figure}
 
 \paragraph{On the implementation} \begin{itemize}
   \item We favor the nearer information when there is a tie.
   \item Python is not a well typed language, it is so easy to have
   ridiculous bugs.
-  \item cosine distance works much better than euclidean distance.
+  \item Cosine distance works much better than euclidean distance.
   \item When the data is disporpotionally labelled, we need to balance the data to ensure performance for prediction of each label.
+  \item We sometime use implemented fonctions to improve
+  efficacity after having understood the method and
+  implemented ourselves.
 \end{itemize}
 
 \paragraph{Positive} \begin{itemize}
@@ -173,19 +269,9 @@ to do our algorithm on comments of extremities.
 
 \paragraph{Negative} \begin{itemize}
   \item Supervised
-  \item No resistence to disporpotional data
   \item $\Theta(n)$ for each prediction ($n$ the size of training data), which is
   very slow when we want to use a big training data to ensure better prediction.
 \end{itemize}
-
-\paragraph{Testing} Given a label data set, we can test individually
-for each point because of the property of the algorithm (it adapts
-naturally to the data without this point), and get the expected
-accuracy.
-
-\paragraph{On the results}
-
-A graph with different k with or without balancing.
 
 \subsection{Naive Bayes}
 
