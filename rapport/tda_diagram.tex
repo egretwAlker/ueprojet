@@ -44,12 +44,19 @@
   \foreach \vertex in {v1,v2,v3,v4,w1,w2,w3,w4,
   u1,u2,u3,u4,
   uu1,uu2,uu3,uu4}
-    \fill (\vertex) circle (2pt);
+    \fill (\vertex) circle (5pt);
 
   \coordinate (d) at (1.5,-0.5);
-  \draw[->] ($(v1)+(d)$) -- ++(0,-2) node[below] {$\text{Formula}_1$};
-  \draw[->] ($(w1)+(d)$) -- ++(0,-2) node[below] {$\text{Formula}_2$};
-  \draw[->] ($(u1)+(d)$) -- ++(0,-2) node[below] {$\text{Formula}_3$};
-  \draw[->] ($(uu1)+(d)$) -- ++(0,-2) node[below] {$\text{Formula}_4$};
+  \draw[->] ($(v1)+(d)$) -- node[left] {$H_1$} ++(0,-2) node[below] {$\K^0$};
+  \draw[->] ($(w1)+(d)$) -- ++(0,-2) node[below] {$\K^1$};
+  \draw[->] ($(u1)+(d)$) -- ++(0,-2) node[below] {$\K^2$};
+  \draw[->] ($(uu1)+(d)$) -- ++(0,-2) node[below] {$\K^1$};
+
+  \draw[->] (4, -2.75) -- node[above] {$0$}++(3,0);
+  \draw[->] (12,-2.75) -- node[above] {$\begin{pmatrix}1\\0 \end{pmatrix}$}++(3,0);
+  \draw[->] (20,-2.75) -- node[above] {$\begin{pmatrix}1 & 0 \end{pmatrix}$}++(3,0);
   
+  \node at (13.5,-4.5) {\rotatebox{270}{$\simeq$}};
+  \node at (13.5,-6) {$\I_{[2, \infty)} \oplus \I_{[3, 4)}$};
+
 \end{tikzpicture}

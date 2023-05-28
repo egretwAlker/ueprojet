@@ -11,6 +11,8 @@
 \usepackage{pgfplots}
 \usepackage{minted}
 \usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage[margin=2cm]{geometry}
 \hypersetup{
@@ -33,6 +35,7 @@
 \newtheorem{example}{Exemple}
 \newtheorem{tactic}{Tactic}
 \newcommand{\C}{\mathbb{C}}
+\newcommand{\I}{\mathbb{I}}
 \renewcommand{\L}{\mathcal{L}}
 \newcommand{\Cn}{\mathscr{C}}
 \renewcommand{\P}{\mathbb{P}}
@@ -44,6 +47,7 @@
 \newcommand{\F}{\mathcal{F}}
 \newcommand{\RM}[1]{\paragraph{RM} #1}
 \DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\id}{id}
 
 \begin{document}
 
@@ -254,6 +258,13 @@ better stay at 1 (otherwise it damages significantly
 the accuracy on the negatives) and we increase k to
 remedy the disadvantage of positive prediction.
 
+Where does this disadvantage come from, while the number
+of positives and negatives are equal in the training data (after trimming).
+A conjecture of mine is that, the number of positive comments in the test data
+is significantly less than that of the training data so
+some vocabularies are not present in the training data. In this case,
+we can only judge by more basic words and rely on bigger survey, thus increasing k helps.
+
 \begin{figure}[htbp]
   \centering
   \begin{subfigure}[t]{0.33\textwidth}
@@ -330,109 +341,7 @@ where $\mathbb{P}(X\mid Y)$ is the likelihood, $\mathbb{P}(X)$ is the evidence, 
   \item Ability to specify a random seed.
 \end{itemize}
 
-\section{Topological data analysis, persistent homology}
-
-Let's introduce some terms to enable a better understood discussion.
-
-\begin{definition}[$p$-simplex ($p\in\N$)]
-  Let $V$ be some finite set (the vertices).
-  A $p$-simplex $\sigma$ is the convex hull of $p+1$
-  points $x_0, \ldots, x_p \in V$.
-  We denote $\sigma = \conv\{x_0, \ldots, x_p\}$ a subset of $V$.
-\end{definition}
-\RM In practice, we simplify a topological space to its homology equivalence (thin
-triangulation) without
-losing the information we want (connected compoenents, holes).
-
-\begin{definition}[Face]
-  A face of $\sigma$ is $\conv(S)$ where $S\subset\{x_0,\ldots, x_p\}$
-\end{definition}
-
-\begin{definition}[Simplicial complex]
-  A simplicial complex $X$ is a finite collection of simplices s.t.
-  $$
-  \forall \sigma\in X, \forall \tau\subset\sigma, \tau\in X
-  $$
-\end{definition}
-
-\begin{definition}[Chain space]
-  The vectorial space of $k$-chains of a simplicial complex $X$ over a field $\K$ is defined by:
-  $$
-  C_k(X) := \left\{\sum_{i=1}^{\left|X_k\right|} \alpha_i \sigma_i: \alpha_i \in \mathbb{X}, \sigma_i \in X_k\right\}
-  \simeq \K^{|X_k|}
-  $$
-\end{definition}
-
-\begin{definition}[$p$-chain]
-  A $p$-chain is a subset of $p$-simplices in a simplicial complex $X$.
-\end{definition}
-
-\begin{definition}[Boundary operator]
-  $$
-  \begin{aligned}
-  \partial_k: C_k(X) & \to C_{k-1}(X) \\
-  \sigma=[v_0, \ldots, v_k] & \mapsto \sum_{j=0}^k(-1)^j \underbrace{[v_0,\ldots, \widehat{v}_j, \ldots, v_k]}_{\in X_{k-1}} \\
-  \left(\lambda \sigma+\sigma^{\prime}\right) & \mapsto \lambda \partial_k \sigma+\partial_k \sigma^{\prime} \text{ (linear extension)}
-  \end{aligned}
-  $$
-\end{definition}
-
-\begin{definition}[$k$-th homology group]
-  \begin{itemize}
-    \item $k$-cycles : $Z_k:=\Ker(\partial_k)$
-    \item $k$-boundaries : $B_k:=\Im(\partial_{k+1})$
-  \end{itemize}
-  The $k$-th homology group of $X$ for the field $\K$ is the following quotient
-  of vector spaces:
-  $$
-  H_k(X):={Z_k\over B_k}
-  $$
-  The $k$-th Betti number $\beta_k = \mathrm{rank}(H_k)$.
-\end{definition}
-
-\begin{definition}[Filtration]
-  A filtration over $T$ is a family $\F = (F_t)_{t\in T}$ of increasing topological spaces:
-  $$
-  \forall t, t^{\prime} \in T, t \leqslant t^{\prime} \Rightarrow F_t \subset F_{t^{\prime}}
-  $$
-\end{definition}
-
-\begin{definition}[Persistence module]
-  Let $\mathbb{K}$ be a given field. A persistence module over $T \subset \mathbb{R}$ is a family $\mathbb{V}=\left(V_t\right)_{t \in T}$ of $\mathbb{K}$-vector spaces endowed with linear application $v_t^{t^{\prime}}: V_t \rightarrow V_{t^{\prime}}$ such that:
-  $$
-  \begin{aligned}
-  & \forall t \in T, v_t^t=i d \\
-  & \forall t \leqslant t^{\prime} \leqslant t^{\prime \prime} \in T, v_{t^{\prime}}^{t^{\prime \prime}} \circ v_t^{t^{\prime}}=v_t^{t^{\prime \prime}}
-  \end{aligned}
-  $$
-  (functoriality conditions)
-\end{definition}
-
-\begin{figure}[htbp]
-\centering
-\input{tda_diagram.tex}
-\end{figure}
-
-\subsection{Essay grading}
-
-Intuitively, a better discoursive essay should have a
-richer writting structure, (a proposition should be discussed
-in different angles, the last paragraph echos to the beginning)
-in homology, if a good essay is a topological space, it should have
-many holes (homological groups).
-
-todo: explain more with pictures.
-
-% \begin{figure}
-% \centering
-% \includegraphics[width=8cm]{persistence_diagram.png}
-% \end{figure}
-
-\paragraph{Similarity Filtration with Time Skeleton (SIFTS) \cite{Zhu_2013}}
-
-todo: show persistence diagrams of essays of different grades.
-
-todo: Length affects, but not much.
+\include{tda.tex}
 
 \printbibliography
 

@@ -1,0 +1,106 @@
+\begin{figure}[htbp]
+  \begin{minipage}[t]{0.33\textwidth}
+  \centering
+  \begin{tabular}{|c|p{2.5cm}|}
+  \hline
+  \multicolumn{2}{|c|}{Number of Sentences 30-35} \\
+  \hline
+  Grade & Average of Number of Barcodes \\
+  \hline
+  3 & 30.75 \\
+  4 & 32.0 \\
+  5 & 33.06 \\
+  6 & 28.33 \\
+  \hline
+  \end{tabular}
+  \end{minipage}%
+  \begin{minipage}[t]{0.33\textwidth}
+  \centering
+  \begin{tabular}{|c|p{2.5cm}|}
+  \hline
+  \multicolumn{2}{|c|}{Number of Sentences 40-45} \\
+  \hline
+  Grade & Average of Number of Barcodes \\
+  \hline
+  3 & 40.0 \\
+  4 & 45.96 \\
+  5 & 49.45 \\
+  6 & 52.0 \\
+  \hline
+  \end{tabular}
+  \end{minipage}%
+  \begin{minipage}[t]{0.33\textwidth}
+  \centering
+  \begin{tabular}{|c|p{2.5cm}|}
+  \hline
+  \multicolumn{2}{|c|}{Number of Sentences 50-55} \\
+  \hline
+  Grade & Average of Number of Barcodes \\
+  \hline
+  3 & 63.0 \\
+  4 & 50.0 \\
+  5 & 79.0 \\
+  \hline
+  \end{tabular}
+  \end{minipage}
+
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={Grade},
+      ylabel={Average of Number of Barcodes},
+      legend pos=outer north east,
+      grid=both,
+    ]
+    
+    % Number of words 200-210
+    \addplot[color=red,mark=*] coordinates {
+      (2, 1.4)
+      (3, 6.25)
+      (4, 15.0)
+    };
+    
+    % Number of words 300-310
+    \addplot[color=blue,mark=square] coordinates {
+      (2, 5.5)
+      (3, 10.89)
+      (4, 12.04)
+    };
+    
+    % Number of words 400-410
+    \addplot[color=green,mark=triangle] coordinates {
+      (1, 10.0)
+      (2, 11.0)
+      (3, 15.0)
+      (4, 17.21)
+      (5, 11.0)
+    };
+    
+    % Number of words 500-510
+    \addplot[color=orange,mark=diamond] coordinates {
+      (3, 20.66)
+      (4, 25.95)
+      (5, 27.5)
+      (6, 46.0)
+    };
+    
+    % Number of words 600-610
+    \addplot[color=purple,mark=x] coordinates {
+      (3, 35.5)
+      (4, 30.0)
+      (5, 31.2)
+    };
+    
+    \legend{
+      Number of words 200-210,
+      Number of words 300-310,
+      Number of words 400-410,
+      Number of words 500-510,
+      Number of words 600-610
+    }
+    
+    \end{axis}
+    \end{tikzpicture}
+
+  \caption{Grades and averages of number of barcodes within fixed sentence/word number ranges}
+  \label{tab:gar}
+\end{figure}
