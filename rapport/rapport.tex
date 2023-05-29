@@ -1,4 +1,3 @@
-
 \documentclass{article}
 \usepackage{mathtools}
 \usepackage{amssymb}
@@ -77,16 +76,17 @@ We are starting by looking at the grades data, since it will be the criterion to
   \begin{minipage}[t]{0.49\linewidth}
     \centering
     \includegraphics[width=\linewidth]{hist_plot_count.png}
-    \label{fig:left_image}
   \end{minipage}\hfill
   \begin{minipage}[t]{0.49\linewidth}
     \centering
     \includegraphics[width=\linewidth]{dist_plot_count.png}
-    \label{fig:right_image}
   \end{minipage}
+  \caption{Grade distribution}
+  \label{fig:grades_distribution}
 \end{figure}
 
-On the density plot, we can notice that the majority of the grades are actually integers. Removing float numbers (or rounding to closest integer) could possibly simplify the model.
+On the density plot (Figure~\ref{fig:grades_distribution}), 
+we can notice that the majority of the grades are actually integers. Removing float numbers (or rounding to closest integer) could possibly simplify the model.
 
 On the histogram plot , we can notice that the majority of reviews are actually positive.
 
@@ -172,11 +172,7 @@ gagner de la mémoire et parfois l'éfficacité.
   \item Preprocessing is important
 \end{itemize}
 
-\section{Treating vectors}
-
-\subsection{Protocol of the evaluation}
-
-Can specify random seed to ensure reproductivity....
+\section{Classification}
 
 \subsection{Distances}
 
@@ -200,12 +196,14 @@ need to reduce the dimension.
 \begin{itemize}
   \item PCA (not useful for us, every new word (if not a stopword) can not be ignored and their linear combinations have no meaning)
   \item t-SNE (only useful for visulization?)
+  \item autoencoder?
 \end{itemize}
 
 After the reduction of dimensionality, we may do a visulization; but
 bad visulization results don't necessarily mean bad classification result.
 
-\subsection{k nearest neighbour}
+\subsection{K-Nearest neighbours}
+\label{subset:knn}
 
 \paragraph{Algorithm} One predicts the information associated with a vector by the majority
 of information associated with its neighbours (within k nearest).
@@ -354,11 +352,6 @@ More precisely, we used Multinomial Naive Bayes for our task because it is suita
 \paragraph{Inconvenients} \begin{itemize}
 \item Estimated probability is often inaccurate because of the naive assumption
 \end{itemize}
-\subsection{Perceptron}
-
-\paragraph{On the implementation}
-% \begin{itemize}
-% \end{itemize}
 
 \section{Evaluation of models - Results}
 
@@ -374,7 +367,41 @@ Therefore, given the size of the dataset, an option would be to undersample the 
 Finally, the metrics we used are standard classification metrics such as precision, recall and F1 score.
 Precision measures the accuracy of positive predictions. Recall measures the ability of the model to identify positive instances correctly. F1-score is a metric that combines precision and recall scores.
 
-\subsection{K-Nearest Neighbors}
+\paragraph{On implementation} We enable to specify random seed to ensure reproductivity.
+
+\subsection{K-Nearest neighbors}
+
+Our assumption/scenario is that :
+
+The given data on the games is disproportional. Most comments are
+positive. So positive comments do not give much information.
+The manager then wants to detect then inspect all the negative comments
+among all the comments.
+
+Our knn (with parameters balance=1, k=500 as explained in \ref{subset:knn}) does this job. So shown
+in Table~\ref{tab:knn}, we almost covered all negative comments,
+the payoff is that the precision of class false is low, meaning
+that the manager needs to see as much as 5 comments to read a true negative
+comment.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{ccccc}
+  \hline
+  Class & Precision & Recall & F1-Score & Support \\
+  \hline
+  False & 0.23 & 0.91 & 0.37 & 1789 \\
+  True & 0.99 & 0.76 & 0.86 & 22520 \\
+  \hline
+  Macro Avg & 0.61 & 0.83 & 0.61 & 24309 \\
+  Weighted Avg & 0.93 & 0.77 & 0.82 & 24309 \\
+  \hline
+  \multicolumn{5}{c}{Accuracy = 0.77} \\
+  \hline
+  \end{tabular}
+  \caption{Classification Metrics}
+  \label{tab:knn}
+\end{table}
 
 \subsection{Naive Bayes}
 
@@ -400,6 +427,7 @@ We notice that without undersampling, the F1 score is very high for the positive
 However, with undersampling, the F1-score is lower for the positive class but it as at least balanced with the negative class. This situation is certainly favorable. 
 
 We are diving into the training phase with looking at learning curves. This is giving us an idea on how well the model generalizes to testing data.
+
 \begin{figure}[H]
   \centering
   \includegraphics[height=7cm]{nb_start_learning_curves.png}
