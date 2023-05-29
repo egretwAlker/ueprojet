@@ -334,13 +334,15 @@ we can only judge by more basic words and rely on bigger survey, thus increasing
 Naive Bayes is a probabilistic classification algorithm.
 It is called naive because it assumes that each input variable is independent.
 
-We are looking for: $ \max_{y}\mathbb{P}(Y =y \mid X=(x_1, ..., x_n) $
+We are looking for:
 
-using the Naive Bayes formula: $\mathbb{P}(Y \mid X)) = \frac{\mathbb{P}(X\mid Y)\cdot \mathbb{P}(Y)}{\mathbb{P}(X)} = \frac{\mathbb{P}(Y)\prod_{i}^{}\mathbb{P}(X_i\mid Y)}{\mathbb{P}(X)}$
-by independence.
+$$ \max_{y}\mathbb{P}(Y =y \mid X=(x_1, ..., x_n)) $$
+
+using the Naive Bayes formula: $\mathbb{P}(Y \mid X) = \frac{\mathbb{P}(X\mid Y)\cdot \mathbb{P}(Y)}{\mathbb{P}(X)} = \frac{\mathbb{P}(Y)\prod_{i}^{}\mathbb{P}(X_i\mid Y)}{\mathbb{P}(X)}$
+by independence,
 where $\mathbb{P}(X\mid Y)$ is the likelihood, $\mathbb{P}(X)$ is the evidence, $\mathbb{P}(Y \mid X)$ is the posterior and $\mathbb{P}(Y)$ is the prior.
-\newline \newline
-More precisely, we used Multinomial Naive bayes for our task because it is suitable for discrete and count-based features, such as word frequencies in text data. The count vectorization of word aligns well with the assumptions of this model. It allows the model to estimate the probability of sentiment classes based on the frequency distribution of words.
+
+More precisely, we used Multinomial Naive Bayes for our task because it is suitable for discrete and count-based features, such as word frequencies in text data. The count vectorization of word aligns well with the assumptions of this model. It allows the model to estimate the probability of sentiment classes based on the frequency distribution of words.
 
 \paragraph{Advantages} \begin{itemize}
 \item Even though the independence assumption is rarely true, the model is still effective
@@ -361,12 +363,12 @@ More precisely, we used Multinomial Naive bayes for our task because it is suita
 \subsection{Model evaluation}
 
 First of all, the split the labeled dataset into training and testing subsets. The model is trained on the training data and then evaluated on the testing data to measure its performance, in order to assess its capacity to generalize predictions to unknown data.
-\newline \newline
+
 Then, we used cross-validation for each model. It divides the data into parts, trains the model on some parts, and tests it on others. This process is repeated multiple times to get a reliable performance estimate. Cross-validation helps us understand how well the model works on unseen data and allows us to find the best settings for the model.
-\newline \newline
+
 As mentioned earlier, the positive and negative classes are somehow imbalanced. Data stratification would be here inappropriate because the minority class will get underrepresented, since it has fewer samples.
 Therefore, given the size of the dataset, an option would be to undersample the positive class: we train models with on data that has the same proportion of positive and negative classes.
-\newline \newline
+
 Finally, the metrics we used are standard classification metrics such as precision, recall and F1 score.
 Precision measures the accuracy of positive predictions. Recall measures the ability of the model to identify positive instances correctly. F1-score is a metric that combines precision and recall scores.
 
@@ -392,9 +394,9 @@ Precision measures the accuracy of positive predictions. Recall measures the abi
 \end{figure}
 
 We notice that without undersampling, the F1 score is very high for the positive class but it is low for the negative. The model is biased towards predicting positive sentiment, leading to a higher number of false negatives. 
-\newline
+
 However, with undersampling, the F1-score is lower for the positive class but it as at least balanced with the negative class. This situation is certainly favorable. 
-\newline
+
 We are diving into the training phase with looking at learning curves. This is giving us an idea on how well the model generalizes to testing data.
 \begin{figure}[H]
   \centering
@@ -405,7 +407,7 @@ We are diving into the training phase with looking at learning curves. This is g
 
 We can see that the training F1-score is a bit larger than the testing F1-score, which is a sign of overfitting.
 It could be attributed to the assumptions of independence made by the algorithm. Naive Bayes assumes that the features are conditionally independent given the class, which may not be the case.
-\newline \newline
+
 Nonetheless, the difference is not very large, so we might want to stick with it.
 
 \section{Insights - Analysis}
@@ -414,25 +416,25 @@ Nonetheless, the difference is not very large, so we might want to stick with it
 
 The most challenging task was to process data since the dataset is very large. We realized how efficient libraries are, since their computation time is low compared to when we implement it all by hand.
 The implementations are optimized, and the computations are designed for performance. Moreover, libraries such as the ones from sklearn take advantage of parallel computing (executed on multi-core processors). 
-\newline \newline
+
 Another challenge encountered is that it was not obvious at first how to apply preprocessing. Indeed, we had to think about how much we wanted to remove stopwords or common words. Removing these words might simplify the model, but we might also lose information with it. Another example is the use of negative contractions. It was not obvious if they could have a significant impact or not.
-\newline \newline
+
 A common obstacle with NLP is that sentences are far from being perfect, even after preprocessing is applied. Sentiment classifiers can also struggle when encountering words or phrases that were not present in the training data, so that's why using word embeddings are useful to generalize to unknown terms. 
 
 \subsection{Lessons learned throughout the project}
 
 The importance of preprocessing is a first lesson we could remember from this project. Indeed, without preprocessing, making a mathematical representation of words does not make any sense since the word embedding space will have a very large dimension, thus making predictions almost impossible.
-\newline \newline
+
 Then, handling class imbalance. It is easy to classify reviews as positive when the majority of reviews in the training data are positive. Undersampling was a good solution to this problem. 
 
 \subsection{Limitations and areas of improvement}
 
 Sentiment is subjective, and annotating large datasets with sentiment labels can be challenging due to varying interpretations. Consequently, different customers might assign different sentiment scores, leading to inconsistencies in the training and evaluation data. Additionally, sentiment analysis can be dependent on the context, making it challenging to capture the nuances and sarcasm present in text. 
-\newline \newline
+
 Another challenge is the domain adaptation problem, because our model is trained on one domain and may struggle to generalize well to other domains due to differences in language usage and sentiment expressions.
-\newline \newline
+
 We could evaluate the ability of our model to generalize to reviews from other fields (such as movies reviews) and see if it can transfer its knowledge pretty well or not.
-\newline \newline
+
 Finally, the models we used to represent text data were not sequential for the most part, instead it focused on the words themselves. An option would be to use Deep Learning models such as recurrent neural networks (RNNs), long short-term memory (LSTM) networks, or transformer-based architectures (e.g., BERT, GPT). These models can capture complex linguistic patterns and contextual information. 
 
 \include{tda.tex}
