@@ -62,10 +62,10 @@
 We were given several datasets from the website ??? which sells a variety of board games. This website collects data for every article, such as reviews and grades posted by the users. 
 
 Our task was to treat and analyze this data to try to gain information from it. One purpose was to classify these reviews and being able to predict the sentiment of review (positive or negative). 
-\newline \newline
+
 This is a real-world application since the company could automatically gain insight on products by correlating words with grades.
 The utilization of word vector representation and dimensionality reduction is useful in establishing meaningful associations between words and the sentiment expressed in reviews. The company could explore the represented space to find trends in what people like or dislike, and therefore potentially increasing sales.
-\newline \newline
+
 So, what valuable insights can be extracted from these reviews? How can we effectively capture and quantify the sentiments conveyed?
 The following report will highlight our methodology to uncover patterns, our data processing approaches and the potential of our findings.  
 \newpage
@@ -86,8 +86,10 @@ We are starting by looking at the grades data, since it will be the criterion to
   \end{minipage}
 \end{figure}
 
-On the density plot, we can notice that the majority of the grades are actually integers. Removing float numbers (or rounding to closest integer) could possibly simplify the model. \newline
-On the histogram plot , we can notice that the majority of reviews are actually positive. \newline \newline
+On the density plot, we can notice that the majority of the grades are actually integers. Removing float numbers (or rounding to closest integer) could possibly simplify the model.
+
+On the histogram plot , we can notice that the majority of reviews are actually positive.
+
 It is cautious to already say it could introduce some challenges. Indeed, since grades are quite imbalanced, the model can become biased towards positive reviews. The model may tend to predict positive reviews more frequently, leading to lower accuracy for negative ones and an overall imbalance in predictions. Also, since there are fewer samples from negative reviews, the model may not have enough representative examples to learn the patterns and characteristics of the negative class.
 
 \section{Corpus to vectors}
