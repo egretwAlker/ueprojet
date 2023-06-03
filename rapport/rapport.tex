@@ -216,97 +216,10 @@ say if it is definitely positive or negative as human-being, so less chance
 for our more or less naïve algorithm. For this reason we chose
 to do our algorithm on comments of extremities.
 
-To begin with, we delibrately balanced the data, 50\% of positive comments (5000)
-and 50\% of negative comments (5000).
-
-By adjusting the k, we obtained such result shown in Figure~\ref{fig:KNN1}.
-
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}
-      \begin{axis}[
-          xlabel={\textbf{k}},
-          ylabel={\textbf{Accuracy}},
-          xmin=0, xmax=5500,
-          ymin=0.6, ymax=1,
-          xtick={0,1000,2000,3000,4000,5000},
-          ytick={0.6,0.7,0.8,0.9,1},
-          legend pos=north west,
-          grid=both,
-          grid style={line width=0.2pt, draw=gray!30},
-          major grid style={line width=0.4pt,draw=gray!60},
-          height=8cm,
-      ]
-      \addplot[color=blue, mark=*] coordinates {
-          (5,0.7606)
-          (55,0.8522)
-          (500,0.857)
-          (1000,0.8332)
-          (2000,0.7932)
-          (5000,0.6984)
-      };
-      \addplot[color=red, mark=square] coordinates {
-          (5,0.691)
-          (55,0.7964)
-          (500,0.857)
-          (1000,0.8836)
-          (2000,0.908)
-          (5000,0.9378)
-      };
-      \legend{Negative Comments, Positive Comments}
-      \end{axis}
-  \end{tikzpicture}
-  \caption{k nearest neighbor on balanced data}
-  \label{fig:KNN1}
-\end{figure}
-
-That was some good results. But in the reality, our data is extremely disporpotional,
-if we apply KNN directly, the algorithm would predict positive almost everytime. (Although
-a positive comment has less chance to enter the neighbourhood of a negtive comment,
-there are too many of them.) Indeed, we tried and get 0.26 as accuracy for negative comments and 0.94 for
-positive comments.
-
-The accuracy in total (on the data set) was good but it was not what we are after. We would like
-$(r_p+r_n)/2$ to be big (so in the previous case it was 0.6). $r_{p/n}$ is the accuracy on the positive/negative comments.
-
-To solve this problem, we add a parameter to our algorithm: \textbf{balance}.
+We add a parameter to our algorithm: \textbf{balance}.
 balance is a float >= 1 meaning that we trim the list of data of one label
 of more quantity to size = balance$\times$(number of data with another label).
-
-As the Figure~\ref{fig:balancenk} shows, the balance value would
-better stay at 1 (otherwise it damages significantly
-the accuracy on the negatives) and we increase k to
-remedy the disadvantage of positive prediction.
-
-Where does this disadvantage come from, while the number
-of positives and negatives are equal in the training data (after trimming).
-A conjecture of mine is that, the number of positive comments in the test data
-is significantly less than that of the training data so
-some vocabularies are not present in the training data. In this case,
-we can only judge by more basic words and rely on bigger survey, thus increasing k helps.
-
-\begin{figure}[htbp]
-  \centering
-  \begin{subfigure}[t]{0.33\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{balancek5.png}
-    \caption{k=5}
-  \end{subfigure}%
-  \hfill
-  \begin{subfigure}[t]{0.33\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{balancek50.png}
-    \caption{k=50}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.33\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{balancek500.png}
-    \caption{k=500}
-  \end{subfigure}
-  \caption{Figure with Multiple Images}
-  \label{fig:balancenk}
-\end{figure}
+This is to solve the problem of disporpotional labelled data.
 
 \paragraph{On the implementation} \begin{itemize}
   \item We favor the nearer information when there is a tie.
@@ -371,15 +284,103 @@ Precision measures the accuracy of positive predictions. Recall measures the abi
 
 \subsection{K-Nearest neighbors}
 
-Our assumption/scenario is that :
+To begin with, we delibrately balanced the data, 50\% of positive comments (5000)
+and 50\% of negative comments (5000).
+
+By adjusting the k, we obtained such result shown in Figure~\ref{fig:KNN1}.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+      \begin{axis}[
+          xlabel={\textbf{k}},
+          ylabel={\textbf{Accuracy}},
+          xmin=0, xmax=2100,
+          ymin=0.6, ymax=1,
+          xtick={0,1000,2000,3000,4000,5000},
+          ytick={0.6,0.7,0.8,0.9,1},
+          legend pos=north west,
+          grid=both,
+          grid style={line width=0.2pt, draw=gray!30},
+          major grid style={line width=0.4pt,draw=gray!60},
+          height=8cm,
+      ]
+      \addplot[color=blue, mark=*] coordinates {
+          (5,0.7606)
+          (55,0.8522)
+          (500,0.857)
+          (1000,0.8332)
+          (2000,0.7932)
+      };
+      \addplot[color=red, mark=square] coordinates {
+          (5,0.691)
+          (55,0.7964)
+          (500,0.857)
+          (1000,0.8836)
+          (2000,0.908)
+      };
+      \legend{Negative Comments, Positive Comments}
+      \end{axis}
+  \end{tikzpicture}
+  \caption{k nearest neighbor on balanced data}
+  \label{fig:KNN1}
+\end{figure}
+
+That was some good results. But in the reality, our data is extremely disporpotional,
+if we apply KNN directly, the algorithm would predict positive almost everytime. (Although
+a positive comment has less chance to enter the neighbourhood of a negtive comment,
+there are too many of them.) Indeed, we tried and get 0.26 as accuracy for negative comments and 0.94 for
+positive comments.
+
+The accuracy in total (on the data set) was good but it was not what we are after. We would like
+$(r_p+r_n)/2$ to be big (so in the previous case it was 0.6). $r_{p/n}$ is the accuracy on the positive/negative comments.
+
+To solve this problem, we use our \textbf{balance} parameter introduced before.
+
+As the Figure~\ref{fig:balancenk} shows, the balance value would
+better stay at 1 (otherwise it damages significantly
+the accuracy on the negatives) and we increase k to
+remedy the disadvantage of positive prediction.
+
+Where does this disadvantage come from, while the number
+of positives and negatives are equal in the training data (after trimming).
+A conjecture of mine is that, the number of positive comments in the test data
+is significantly less than that of the training data so
+some vocabularies are not present in the training data. In this case,
+we can only judge by more basic words and rely on bigger survey, thus increasing k helps.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{0.33\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{balancek5.png}
+    \caption{k=5}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}[t]{0.33\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{balancek50.png}
+    \caption{k=50}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.33\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{balancek500.png}
+    \caption{k=500}
+  \end{subfigure}
+  \caption{Positive comments are labelled as true and negative comments are labelled as false}
+  \label{fig:balancenk}
+\end{figure}
+
+Now we show a case in reality, our assumption/scenario is that :
 
 The given data on the games is disproportional. Most comments are
 positive. So positive comments do not give much information.
 The manager then wants to detect then inspect all the negative comments
 among all the comments.
 
-Our KNN (with parameters balance=1, k=500 as explained in \ref{subset:KNN}) does this job. So shown
-in Table~\ref{tab:KNN}, we almost covered all negative comments,
+Our KNN (with parameters balance=1, k=500 as explained in \ref{subset:KNN}) does this job.
+So as shown in Table~\ref{tab:KNN}, we almost covered all negative comments,
 the payoff is that the precision of class false is low, meaning
 that the manager needs to see as much as 5 comments to read a true negative
 comment.
