@@ -57,6 +57,13 @@ So our approache will consider all the scales (whence ``persistent'' homology).
 \label{fig:scale}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \input{tda_diagram.tex}
+  \caption{Filtration gives persistence module gives decomposition gives barcodes}
+  \label{fig:tda_diagram}
+  \end{figure}
+
 \paragraph{Similarity Filtration with Time Skeleton (SIFTS) \cite{Zhu_2013}}
 
 As in KNN we choose an embedding and a
@@ -76,7 +83,9 @@ Given an essay, we split it to sentences in order. We embed each sentence by tf-
 Then we construct our matrix $M$ by setting $M_{i, j} = 1-\cos(\theta_{i,j})~\text{(the cosine distance)}$
 where $\theta_{i, j}$ is the angle between the vectors embedded by the ith and jth sentences.
 Then we set $M_{i, i+1} = 0$ (this is where the ``time skeleton'' come from, the reason is
-to preserve the order of the essay). In the filtration, what all this means is that,
+to preserve the order of the essay). We obtain then
+a filtration of Rips complexes.
+In the filtration, what all this means is that,
 at index 0, we will have a skeleton from the first sentence to the last sentence,
 then we add simplexes with closer points then those with further points.
 
@@ -294,13 +303,6 @@ The scale matters Figure~\ref{fig:scale}.
 and following the linear map until it diminishes and concluding an interval module;
 the multiset of pairs of extremities of the intervals obtained by decomposition is called the \textbf{barcodes}
 or the persistence diagram; to compute the decomposition, we do Gauss elimination (explained in the following).
-
-\begin{figure}[htbp]
-\centering
-\input{tda_diagram.tex}
-\caption{Filtration gives persistence module gives decomposition gives barcodes}
-\label{fig:tda_diagram}
-\end{figure}
 
 \subsubsection{Algorithm to calculate the persistence diagram}
 
