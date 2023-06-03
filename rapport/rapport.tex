@@ -58,7 +58,7 @@
 \newpage
 \section{Introduction - Motivation}
 
-We were given several datasets from the website ??? which sells a variety of board games. This website collects data for every article, such as reviews and grades posted by the users. 
+We were given several datasets from the website \textit{tric trac} which sells a variety of board games. This website collects data for every article, such as reviews and grades posted by the users. 
 
 Our task was to treat and analyze this data to try to gain information from it. One purpose was to classify these reviews and being able to predict the sentiment of review (positive or negative). 
 
@@ -203,7 +203,7 @@ After the reduction of dimensionality, we may do a visulization; but
 bad visulization results don't necessarily mean bad classification result.
 
 \subsection{K-Nearest neighbours}
-\label{subset:knn}
+\label{subset:KNN}
 
 \paragraph{Algorithm} One predicts the information associated with a vector by the majority
 of information associated with its neighbours (within k nearest).
@@ -219,7 +219,7 @@ to do our algorithm on comments of extremities.
 To begin with, we delibrately balanced the data, 50\% of positive comments (5000)
 and 50\% of negative comments (5000).
 
-By adjusting the k, we obtained such result shown in Figure~\ref{fig:knn1}.
+By adjusting the k, we obtained such result shown in Figure~\ref{fig:KNN1}.
 
 \begin{figure}[htbp]
   \centering
@@ -257,11 +257,11 @@ By adjusting the k, we obtained such result shown in Figure~\ref{fig:knn1}.
       \end{axis}
   \end{tikzpicture}
   \caption{k nearest neighbor on balanced data}
-  \label{fig:knn1}
+  \label{fig:KNN1}
 \end{figure}
 
 That was some good results. But in the reality, our data is extremely disporpotional,
-if we apply knn directly, the algorithm would predict positive almost everytime. (Although
+if we apply KNN directly, the algorithm would predict positive almost everytime. (Although
 a positive comment has less chance to enter the neighbourhood of a negtive comment,
 there are too many of them.) Indeed, we tried and get 0.26 as accuracy for negative comments and 0.94 for
 positive comments.
@@ -378,8 +378,8 @@ positive. So positive comments do not give much information.
 The manager then wants to detect then inspect all the negative comments
 among all the comments.
 
-Our knn (with parameters balance=1, k=500 as explained in \ref{subset:knn}) does this job. So shown
-in Table~\ref{tab:knn}, we almost covered all negative comments,
+Our KNN (with parameters balance=1, k=500 as explained in \ref{subset:KNN}) does this job. So shown
+in Table~\ref{tab:KNN}, we almost covered all negative comments,
 the payoff is that the precision of class false is low, meaning
 that the manager needs to see as much as 5 comments to read a true negative
 comment.
@@ -400,7 +400,7 @@ comment.
   \hline
   \end{tabular}
   \caption{Classification report with no undersampling}
-  \label{tab:knn}
+  \label{tab:KNN}
 \end{table}
 
 \subsection{Naive Bayes}
@@ -455,7 +455,7 @@ A common obstacle with NLP is that sentences are far from being perfect, even af
 
 The importance of preprocessing is a first lesson we could remember from this project. Indeed, without preprocessing, making a mathematical representation of words does not make any sense since the word embedding space will have a very large dimension, thus making predictions almost impossible.
 
-Then, handling class imbalance. It is easy to classify reviews as positive when the majority of reviews in the training data are positive. Undersampling was a good solution to this problem. 
+Then, handling class imbalance. It is easy to classify reviews as positive when the majority of reviews in the training data are positive. Undersampling was a good solution to this problem (no it's not..). 
 
 \subsection{Limitations and areas of improvement}
 

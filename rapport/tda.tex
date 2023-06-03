@@ -1,14 +1,190 @@
-
 \section{Topological data analysis, persistent homology}
+
+In this section we introduce a method for analysing a text
+without a parameter (e.g.\ k in KNN), in fact, we consider all
+the possibility of parameters. Moreover, we want to be able to
+find a meaningful correspondence between the computation and
+the text. We use persistent homology.
+
+But for this matter, for simplicity and the reason of capacity
+of the author, we have to change our task.
+
+This is a project report instead of a course note, so the importance
+is not on the details of the algorithm but rather the ideas and experiments.
+But the algorithm and the theory itself are interesting and not
+easy to be found clearly on the internet, so we include concisely the necessary
+concepts and key algorithms there \ref{theoretical}.
+
+\subsection{Essay grading}
+
+Inherently, persistent homology is useful when it comes to 3d modeling.
+But in data analysis in general, it is also useful (e.g.\ analyse the
+performance of a basketball team and get a intuitive view of the team structure).
+
+Here we use the persistent homology to analyse essays and grading.
+
+Roughly speaking, a better discoursive essay should have a
+richer writting structure, (a proposition should be discussed
+in different angles, the last paragraph echos to the beginning).
+Translated in persistent homology,
+if a good essay is a topological space, it should have
+many holes (homology groups). For example,
+in Figure~\ref{apple}, the essay have a statement, and then some arguments,
+, finally a conclusion. 1 - 2 - 3 - 4 are linked by time order, 1 - 4 are linked because they are similar.
+This hole means good argument. There are also filled triangles (2-simplices), those
+sentences form clusters, so they are filled instead of forming holes.
+(We are going to introduce how to build concretely simplicial complexes very soon.)
+
+\begin{figure}[H]
+  \centering
+  \input{apple.tex}
+  \caption{There are 2 holes in this simplicial complex,
+  one represented by the blue cycle and one by brown.
+  Note that the brown cycle and the green cycle are homology equivalent, so they count as one.}
+  \label{apple}
+\end{figure}
+
+If we only have one such graph, we will have to determine the similarity to link.
+However, different similarity bars can give different simplicial complexes and have
+different homology groups. Structure changes with scale, e.g.\ Figure~\ref{fig:scale}.
+So our approache will consider all the scales (whence ``persistent'' homology).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=14cm]{scale.png}
+\caption{Structure changes with scale}
+\label{fig:scale}
+\end{figure}
+
+\paragraph{Similarity Filtration with Time Skeleton (SIFTS) \cite{Zhu_2013}}
+
+As in KNN we choose an embedding and a
+distance. Then we construct a filtration (a sequence of inclusions
+of simplical complexes) of Rips Complexes.
+
+\begin{definition}[Rips complex]
+  Given a symmetric matrix $M \in M_n(R^+)$, we define a filtration of Rips complexes
+  $$
+  (V_d := \{A \subset \llbracket 1, n\rrbracket :
+  \forall 1\le i<j\le n, M_{i, j} \le d\})_{d\ge 0}
+  $$
+\end{definition}
+\RM A simplex appears when the last appearance of the its faces happens.
+
+Given an essay, we split it to sentences in order. We embed each sentence by tf-idf.
+Then we construct our matrix $M$ by setting $M_{i, j} = 1-\cos(\theta_{i,j})~\text{(the cosine distance)}$
+where $\theta_{i, j}$ is the angle between the vectors embedded by the ith and jth sentences.
+Then we set $M_{i, i+1} = 0$ (this is where the ``time skeleton'' come from, the reason is
+to preserve the order of the essay). In the filtration, what all this means is that,
+at index 0, we will have a skeleton from the first sentence to the last sentence,
+then we add simplexes with closer points then those with further points.
+
+After having the filtration, we count the ``number of holes'' of dimension 2
+that appears in the filtration (this is formally the \textbf{number of
+barcodes} of dimension 2 after we decompose the persistence module
+induced by the filtration c.f.\ Figure~\ref{fig:tda_diagram}).
+Note that if we just count the number of holes at each index for the filtration,
+it would be trivial and not useful, we have to be able to identity the holes
+throughout the filtration so that we don't count a hole twice.
+
+We hope to show that this number of holes reflects the quality of arguments of an essay.
+
+\paragraph{Experiment on a real set of data}
+
+data source (more precisely, the essay set 2, which is discoursive) :
+\url{https://www.kaggle.com/datasets/thevirusx3/automated-essay-scoring-dataset/code?select=training_set_rel3.tsv}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=8cm]{pdessay.png}
+\caption{The persistence diagram of an essay of grade 4/6 : A point $(x, y)$ in this diagram corresponds to
+a interval module of extremities $x, y$ in the homology of certain degree.
+We have many blue points meaning many holes in dim 1, one red point meaning
+one homology group of dim 1
+}
+\label{fig:pd}
+\end{figure}
+
+\begin{figure}[H]
+% \centering
+\includegraphics[width=8cm]{gradesh1.png}
+\begin{tikzpicture}
+  \begin{axis}[
+    xlabel={Grades},
+    ylabel={Average of number of barcodes dim 1},
+    grid=both,
+    xmin=0,
+    ymin=0,
+    xmax=7,
+    ymax=60,
+    xtick={1,2,3,4,5,6},
+    ytick={0,10,20,30,40,50},
+    width=8cm,
+    height=6cm,
+    ]
+    
+    \addplot[only marks, mark=*, mark size=2pt] coordinates {
+        (1, 0.8333333333333334)
+        (2, 3.7777777777777777)
+        (3, 11.857142857142858)
+        (4, 22.308483290488432)
+        (5, 34.42666666666667)
+        (6, 50.857142857142854)
+    };
+  \end{axis}
+\end{tikzpicture}
+\caption{Number of barcodes increases as grade increases}
+\label{fig:ds}
+\end{figure}
+
+Those are some discoursive essays on the topic of offense/censorship. We first inspect
+an essay with grade 4/6 as an example Figure~\ref{fig:pd}. Then we show
+the average of number of holes for each grade (1-6)
+as well as the average of number of barcodes for each grade (Figure~\ref{fig:ds}).
+We find that number of holes increases as grade increases.
+
+But there are other factors other than the richness of structure of the essay that may affect
+the number of holes, like the number of sentences (if we have more points in the set
+we will have more chances to form holes) or the number of words.
+
+\begin{figure}[H]
+  \includegraphics[width=8cm]{gradesah1s.png}
+  \includegraphics[width=8cm]{gradesah1w.png}
+  \caption{The average of barcodes each sentence/word increases as grade increases}
+  \label{fig:ads}
+\end{figure}
+
+First, let's try to eliminate the effect of number of sentences/number of words
+by dividing it (Figure~\ref{fig:ads}). So as we expected, it still shows an simulated
+increase of number of barcodes and grade. But even now we may suspect that,
+maybe the number of barcodes is just the number of sentences squared. To show that
+this is not the case, we fix the number of sentences/the number of words in a range
+and inspect the number of barcodes.
+
+\input{ah1tables.tex}
+
+Seeing Figure~\ref{tab:gar}, we indeed observe and confirm the correlation of increase
+that we conjectured. However, the correlation is not absolute as we can constate.
+This is because we don't have enough data (for almost all contradictory data
+we have selected only one essay of that grade in that range) and other factors than the argument
+do affect the grade too (barcodes only show the structure of an essay, for which we
+chose to do the tests on discoursive essays). Typically, the wording
+of essays of grade 3 but with 30-40 barcodes is bad and repetitive, which is
+probably the reason why they are graded not high.
+
+\paragraph{Further} We may provision studying the identification of type
+of arguments (or in previous case, type of comments) by exploiting persistent homology structure,
+trying higher dimensional persistent homology etc. But our journey ends here.
+
+\subsection{Theoretical}
+\label{theoretical}
 
 This content is a synthesis of this course\cite{INF556} and other
 information on the internet.
 
-Motivation: given a point set, find the underlying (homology) structure of
+\paragraph{Motivation} Given a point set, find the underlying (homological) structures of
 the data. First, let's consider a topological space, how do we determine
-the homology structure of the space in a computational way. In this way,
-we don't need to specify any parameter (like k in knn) -- we take into account
-all the possibilities for the parameter.
+the homology structure of the space in a computational way.
 
 \begin{definition}[$p$-simplex ($p\in\N$)]
   Let $V$ be some finite set (the vertices).
@@ -85,12 +261,6 @@ we may link the points in the set to form a simplicial complex.
 The way in which we link the points change our view of the underlying structure.
 The scale matters Figure~\ref{fig:scale}.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=14cm]{scale.png}
-\caption{Structure changes with scale}
-\label{fig:scale}
-\end{figure}
 
 \begin{definition}[Filtration]
   A filtration over $T$ is a family $\F = (F_t)_{t\in T}$ of increasing topological spaces:
@@ -122,7 +292,7 @@ The scale matters Figure~\ref{fig:scale}.
 \RM Intuitively, the way to decompose is beginning from where a cycle occurs
 and following the linear map until it diminishes and concluding an interval module;
 the multiset of pairs of extremities of the intervals obtained by decomposition is called the \textbf{barcodes}
-or the persistence diagram; to compute the decomposition, we do Gauss elimination (explain?).
+or the persistence diagram; to compute the decomposition, we do Gauss elimination (explained in the following).
 
 \begin{figure}[htbp]
 \centering
@@ -131,7 +301,7 @@ or the persistence diagram; to compute the decomposition, we do Gauss eliminatio
 \label{fig:tda_diagram}
 \end{figure}
 
-\subsection{Algorithm to calculate the persistence diagram}
+\subsubsection{Algorithm to calculate the persistence diagram}
 
 \paragraph{Input} A simplicial filtration, that is a filtration over a simplicial complex $K$ which verifies:
 \begin{itemize}
@@ -173,7 +343,7 @@ So the pairing is right.
 
 \end{proof}
 
-\subsection{Stability theorem}
+\subsubsection{Stability theorem}
 
 \newcommand{\Dg}{\mathrm{Dg}}
 
@@ -252,118 +422,3 @@ and we have a finite number of barcodes.
   (We can optimise it to $\varepsilon$)
   
 \end{proof}
-
-\subsection{Application: essay grading}
-
-Inherently, persistent homology is useful when it comes to 3d modeling.
-But in data analysis in general, it is also useful (e.g.\ analyse the
-performance of a basketball team and get a intuitive view of the team structure).
-
-Here we use the persistent homology to analyse essays and grading.
-
-Roughly speaking, a better discoursive essay should have a
-richer writting structure, (a proposition should be discussed
-in different angles, the last paragraph echos to the beginning).
-Translated in persistent homology,
-if a good essay is a topological space, it should have
-many holes (homological groups).
-
-\paragraph{Similarity Filtration with Time Skeleton (SIFTS) \cite{Zhu_2013}}
-
-\begin{definition}[Rips complex]
-  Given a symmetric matrix $M \in M_n(R^+)$, we define a filtration of Rips complex
-  $$
-  (V_d := \{A \subset \llbracket 1, n\rrbracket :
-  \forall 1\le i<j\le n, M_{i, j} \le d\})_{d\ge 0}
-  $$
-\end{definition}
-
-Given an essay, we split it to sentences in order. We embed each sentence by tf-idf.
-Then we construct our matrix $M$ by setting $M_{i, j} = 1-\cos(\theta_{i,j})$ where
-$\theta_{i, j}$ is the angle between the vectors embedded by the ith and jth sentences.
-Then we set $M_{i, i+1}$ (this is where the ``time skeleton'' come from, the reason is
-to preserve the order of the essay).
-
-\paragraph{Experiment on a real set of data}
-
-data source (more precisely, the essay set 2, which is discoursive) :
-\url{https://www.kaggle.com/datasets/thevirusx3/automated-essay-scoring-dataset/code?select=training_set_rel3.tsv}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=8cm]{pdessay.png}
-\caption{The persistence diagram of an essay of grade 4/6 :
-we see $\beta_0 = 1$ because of the time skeleton, the points near the $y=x$ line
-are probably noise}
-\label{fig:pd}
-\end{figure}
-
-\begin{figure}[htbp]
-% \centering
-\includegraphics[width=8cm]{gradesh1.png}
-\begin{tikzpicture}
-  \begin{axis}[
-    xlabel={Grades},
-    ylabel={Average of number of barcodes dim 2},
-    grid=both,
-    xmin=0,
-    ymin=0,
-    xmax=7,
-    ymax=60,
-    xtick={1,2,3,4,5,6},
-    ytick={0,10,20,30,40,50},
-    width=8cm,
-    height=6cm,
-    ]
-    
-    \addplot[only marks, mark=*, mark size=2pt] coordinates {
-        (1, 0.8333333333333334)
-        (2, 3.7777777777777777)
-        (3, 11.857142857142858)
-        (4, 22.308483290488432)
-        (5, 34.42666666666667)
-        (6, 50.857142857142854)
-    };
-  \end{axis}
-\end{tikzpicture}
-\caption{Number of barcodes increases as grade increases}
-\label{fig:ds}
-\end{figure}
-
-Those are some discoursive essays on the topic of offense/censorship. We first inspect
-an essay with grade 4/6 as an example Figure~\ref{fig:pd}. Then we show
-the distribution of number of barcodes of dimension 2 for each grade (1-6)
-as well as the average of number of barcodes for each grade (Figure~\ref{fig:ds}).
-We find that number of barcodes increases as grade increases.
-
-But there are other factors other than the richness of structure of the essay that may affect
-the number of barcodes, like the number of sentences (if we have more points in the set
-we will have more chances to form holes) or the number of words.
-
-\begin{figure}[htbp]
-  \includegraphics[width=8cm]{gradesah1s.png}
-  \includegraphics[width=8cm]{gradesah1w.png}
-  \caption{The average of barcodes each sentence/word increases as grade increases}
-  \label{fig:ads}
-\end{figure}
-
-First, let's try to eliminate the effect of number of sentences/number of words
-but dividing it (Figure~\ref{fig:ads}). So as we expected, it still shows an simulated
-increase of number of barcodes and grade. But even now we may suspect that,
-maybe the number of barcodes is just the number of sentences squared. To show that
-this is not the case, we fix the number of sentences/the number of words in a range
-and inspect the number of barcodes.
-
-\input{ah1tables.tex}
-
-Seeing Figure~\ref{tab:gar}, we indeed observe and confirm the correlation of increase
-that we conjectured. However, the correlation is not absolute as we can constate.
-This is because we don't have enough data and other factors do affect
-too (barcodes only show the structure of an essay, for which we
-chose to do the tests on discoursive essays). Typically, the wording
-of essays of grade 3 but with 30-40 barcodes is bad and repetitive, which is
-probably the reason why they are graded not high.
-
-\paragraph{Further} We may provision studying the identification of type
-of arguments by its persistent homology, trying higher dimensional
-persistent homology etc. But our journey ends here.
