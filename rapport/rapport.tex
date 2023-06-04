@@ -77,8 +77,6 @@ The utilization of word vector representation and dimensionality reduction is us
     \includegraphics[width=\linewidth]{tric_trac_df.png}
     \caption{Tric Trac Dataframe}
   \end{minipage}
-  \caption{Grade distribution}
-  \label{fig:grades_distribution}
 \end{figure}
 The features X represent the \textit{comment} column and the target variable y is \textit{grade}.
 \\\\
@@ -101,7 +99,7 @@ We are starting by looking at the grades data, since it will be the criterion to
   \caption{Grade distribution}
 \end{figure}
 
-On the density plot (Figure~\ref{fig:grades_distribution}), 
+On the histogram on the left plot, 
 we can notice that the majority of the grades are actually integers. Removing float numbers (or rounding to closest integer) could possibly simplify the model.
 On the histogram plot , we can notice that the majority of reviews are actually positive.
 \\\\
@@ -472,7 +470,7 @@ We are diving into the training phase with looking at learning curves. This is g
 \begin{figure}[H]
   \centering
   \includegraphics[height=7cm]{nb_start_learning_curves.png}
-  \caption{Learning curves for Multinomial NB with undersampling}
+  \caption{Learning curves for Multinomial NB with undersampling (with training size in thousands)}
   \label{fig:image_label}
 \end{figure}
 
