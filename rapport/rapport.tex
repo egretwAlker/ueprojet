@@ -287,12 +287,12 @@ This is to solve the problem of disporpotional labelled data.
 
 \subsection{Model evaluation}
 
-First of all, the split the labeled dataset into training and testing subsets. The model is trained on the training data and then evaluated on the testing data to measure its performance, in order to assess its capacity to generalize predictions to unknown data.\\
+First of all, the split the labeled dataset into training and testing subsets. The model is trained on the training data and then evaluated on the testing data to measure its performance, in order to assess its capacity to generalize predictions to unknown data.
 
-Then, we used cross-validation for each model. It divides the data into parts, trains the model on some parts, and tests it on others. This process is repeated multiple times to get a reliable performance estimate. Cross-validation helps us understand how well the model works on unseen data and allows us to find the best settings for the model.\\
+Then, we used cross-validation for each model. It divides the data into parts, trains the model on some parts, and tests it on others. This process is repeated multiple times to get a reliable performance estimate. Cross-validation helps us understand how well the model works on unseen data and allows us to find the best settings for the model.
 
 As mentioned earlier, the positive and negative classes are somehow imbalanced. Data stratification would be here inappropriate because the minority class will get underrepresented, since it has fewer samples.
-Therefore, given the size of the dataset, an option would be to undersample the positive class: we train models with on data that has the same proportion of positive and negative classes.\\
+Therefore, given the size of the dataset, an option would be to undersample the positive class: we train models with on data that has the same proportion of positive and negative classes.
 
 Finally, the metrics we used are standard classification metrics such as precision, recall and F1 score.
 Precision measures the accuracy of positive predictions. Recall measures the ability of the model to identify positive instances correctly. F1-score is a metric that combines precision and recall scores.
