@@ -145,6 +145,27 @@ We can represent the set of sentences as a tensor of shape (a, b, c) ie a matric
 
 \subsection{Bag of Words}
 
+The Bag of Words (BoW) technique is a commonly used method for representing text data in natural language processing. It treats each document or sentence as a collection of words without considering the order or grammar, focusing only on the frequency of words. BoW represents text data as a sparse matrix, where each row corresponds to a document or sentence, and each column represents a unique word in the vocabulary.
+
+\paragraph{Implementation Details}
+
+In the BoW representation, the set of sentences is transformed into a matrix, where each row corresponds to a document or sentence, and each column represents a unique word in the vocabulary. The value in each cell of the matrix indicates the frequency or occurrence of the corresponding word in the document.
+
+\paragraph{Advantages}
+
+\begin{itemize}
+\item \textbf{Intuitive and easy to implement}: The BoW technique provides a straightforward representation of text data, where words are treated as independent features, and their frequencies capture some information about the documents.
+\end{itemize}
+
+\paragraph{Disadvantages}
+
+\begin{itemize}
+\item \textbf{Increase in dimensionality}: One drawback of the BoW technique is the increase in dimensionality. As the vocabulary size grows, the number of columns in the matrix increases, occupying more memory space and resulting in higher computational costs. Additionally, the resulting matrix is sparse, containing mostly zeros.
+\item \textbf{Loss of word order and grammar}: By disregarding the order and grammar of words, the BoW technique may lose important linguistic information present in the text data.
+\item \textbf{Lack of semantic meaning}: BoW representation treats each word independently, ignoring the semantic relationships between words, which can limit its ability to capture the meaning and context of the text.
+\end{itemize}
+
+
 \subsection{tf-idf}
 
 The BoW (Bag of Words) model assumes that the importance of a term is directly proportional to
