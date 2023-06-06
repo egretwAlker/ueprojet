@@ -418,16 +418,16 @@ comment.
   \hline
   Class & Precision & Recall & F1-Score & Support \\
   \hline
-  False & 0.73 & 0.28 & 0.41 & 6801 \\
-  True & 0.89 & 0.98 & 0.93 & 39941 \\
+  False (negative comments) & 0.23 & 0.91 & 0.37 & 1789 \\
+  True (positive comments) & 0.99 & 0.76 & 0.86 & 22520 \\
   \hline
-  Macro Avg & 0.81 & 0.63 & 0.67 & 46742 \\
-  Weighted Avg & 0.87 & 0.88 & 0.86 & 46742 \\
+  Macro Avg & 0.61 & 0.83 & 0.61 & 24309 \\
+  Weighted Avg & 0.93 & 0.77 & 0.82 & 24309 \\
   \hline
-  \multicolumn{5}{c}{Accuracy = 0.88} \\
+  \multicolumn{5}{c}{Accuracy = 0.77} \\
   \hline
   \end{tabular}
-  \caption{Classification report with no undersampling}
+  \caption{Classification report with undersampling}
   \label{tab:KNN}
 \end{table}
 
@@ -439,8 +439,8 @@ comment.
   \hline
   Class & Precision & Recall & F1-Score & Support \\
   \hline
-  False & 0.73 & 0.28 & 0.41 & 6801 \\
-  True & 0.89 & 0.98 & 0.93 & 39941 \\
+  False (negative comments) & 0.73 & 0.28 & 0.41 & 6801 \\
+  True (positive comments) & 0.89 & 0.98 & 0.93 & 39941 \\
   \hline
   Macro Avg & 0.81 & 0.63 & 0.67 & 46742 \\
   Weighted Avg & 0.87 & 0.88 & 0.86 & 46742 \\
@@ -458,8 +458,8 @@ comment.
   \hline
   Class & Precision & Recall & F1-Score & Support \\
   \hline
-  0.0 & 0.86 & 0.84 & 0.85 & 6781 \\
-  1.0 & 0.84 & 0.86 & 0.85 & 6721 \\
+  False (negative comments) & 0.86 & 0.84 & 0.85 & 6781 \\
+  True (positive comments) & 0.84 & 0.86 & 0.85 & 6721 \\
   \hline
   Macro Avg & 0.85 & 0.85 & 0.85 & 13502 \\
   Weighted Avg & 0.85 & 0.85 & 0.85 & 13502 \\
