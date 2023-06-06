@@ -199,14 +199,13 @@ Other possible choices:
   \item The exact formulae can be changed while the same idea remains
 \end{itemize}
 
-\paragraph{On the implementation} Il faut éviter utiliser \verb|for|, et
-utiliser les fonctions numpy à la place; on utilise les matrices sparse pour
-gagner de la mémoire et parfois l'éfficacité.
+\paragraph{On the implementation} \verb|for| is slow in python, do use
+functions in numpy instead; we use sparse matrix as data structure to
+gain memory and boost speed sometimes.
 
 \paragraph{Observations}
 \begin{itemize}
-  \item Curse of dimensionality
-  \item Preprocessing is important
+  \item Preprocessing is important to reduce the dimention
 \end{itemize}
 
 \section{Classification}
@@ -225,8 +224,8 @@ $$
 \end{aligned}
 $$
 
-We see that cosine distance is better in nlp for 1. no curse of dimensionality; 2. no
-need to reduce the dimension.
+We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
+distance tends to be the same to every pair of vectors when the dimension grows).
 
 \subsection{Naive Bayes}
 
