@@ -458,13 +458,13 @@ comment.
   \hline
   Class & Precision & Recall & F1-Score & Support \\
   \hline
-  False (negative comments) & 0.86 & 0.84 & 0.85 & 6781 \\
-  True (positive comments) & 0.84 & 0.86 & 0.85 & 6721 \\
+  False (negative comments) & 0.35 & 0.89 & 0.50 & 6784 \\
+  True (positive comments) & 0.98 & 0.71 & 0.82 & 39958 \\
   \hline
-  Macro Avg & 0.85 & 0.85 & 0.85 & 13502 \\
-  Weighted Avg & 0.85 & 0.85 & 0.85 & 13502 \\
+  Macro Avg & 0.66 & 0.80 & 0.66 & 46742 \\
+  Weighted Avg & 0.88 & 0.74 & 0.78 & 46742 \\
   \hline
-  \multicolumn{5}{c}{Accuracy = 0.85} \\
+  \multicolumn{5}{c}{Accuracy = 0.74} \\
   \hline
   \end{tabular}
   \caption{Classification report with undersampling}
@@ -472,7 +472,7 @@ comment.
 \end{table}
 
 We notice that without undersampling, the F1 score is very high for the positive class but it is low for the negative. The model is biased towards predicting positive sentiment, leading to a higher number of false negatives. 
-However, with undersampling, the F1-score is lower for the positive class but it as at least balanced with the negative class. This situation is certainly favorable. 
+However, with undersampling, the F1-score is lower for the positive class but it as at least balanced with the negative class. As accuracy is not really relevant in the case of class imbalance, it is probably more appropriate to keep the second model with undersampling.
 
 We are diving into the training phase with looking at learning curves. This is giving us an idea on how well the model generalizes to testing data.
 
