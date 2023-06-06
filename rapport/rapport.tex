@@ -120,6 +120,13 @@ Stopwords are commonly used words in a language that are considered to have litt
 
 We also applied Stemming that reduces words to their root forms. It minimizes the confusion around words that have similar meanings and lowers the complexity of the input space. However, it comes at the cost of throwing information away.
 
+For example:
+\begin{verbatim}
+J'avais peur que les extensions s'éssouflent à terme...
+->
+['peur', 'extens', 'éssouflent', 'term']
+\end{verbatim}
+
 \subsection{One Hot Encoding}
 
 One Hot Encoding is a vector representation of a word in vocabulary, ie the unique list of all the words appearing in the documents.
