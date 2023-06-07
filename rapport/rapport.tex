@@ -492,7 +492,7 @@ We are diving into the training phase with looking at learning curves. This is g
   \label{fig:image_label}
 \end{figure}
 
-We can see that the training F1-score is a bit larger than the testing F1-score, which was expected since the model training is done on the training set. Still, the difference still is small so it is going well. 
+We can see that the training F1-score is a bit larger than the testing F1-score, which was expected since the model training is done on the training set. We can see that the validation F1-score keeps on decreasing until the end of the training. This means we should have probably trained it for longer. The recall is better, but using undersampling do not provide enough data for the validation score to be optimal in this case.
 
 \section{Insights - Analysis}
 
