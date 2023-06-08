@@ -9,6 +9,7 @@
 \usepackage{adjustbox}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usetikzlibrary{angles, quotes}
 \usetikzlibrary{calc}
 \usepackage{pgfplots}
 \usepackage{minted}
@@ -234,6 +235,24 @@ $$
 We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
 distance tends to be the same to every pair of vectors when the dimension grows).
 
+\begin{figure}[H]
+\begin{tikzpicture}[scale=1.5]
+  % Coordinate system
+  \draw[->] (0,0) -- (3,0) node[right] {$x$};
+  \draw[->] (0,0) -- (0,2) node[above] {$y$};
+
+  % Vectors
+  \draw[->, red, thick] (0,0) -- (2.5,1.5) coordinate (v1) node[midway, below right] {$\mathbf{v}_1$};
+  \draw[->, blue, thick] (0,0) -- (1.5,2) coordinate (v2) node[midway, above left] {$\mathbf{v}_2$};
+
+  % Angle
+  % \pic [draw, <->, angle radius=15mm, angle eccentricity=1.2, "$\theta$"] {angle = v1--(0,0)--v2};
+
+  % Direct line
+  \draw[dashed] (v1) -- (v2) node[midway, above right] {Euclidean distance};
+\end{tikzpicture}
+\end{figure}
+
 \subsection{Naive Bayes}
 
 The Naive Bayes algorithm do not require text representations such as one-hot encoding. It instead utilizes count vectorization to represent documents. Count vectorization preserves the word frequencies, allowing the algorithm to consider the importance of words in expressing sentiment.
@@ -435,7 +454,7 @@ comment.
   \hline
   \end{tabular}
   \caption{Classification report with undersampling; note that
-  we have less supports here for KNN than naive bayes,
+  we have a smaller support here for KNN than naive bayes,
   this is because of the efficacity problem.}
   \label{tab:KNN}
 \end{table}
