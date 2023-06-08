@@ -2,7 +2,7 @@
 
 In this section we introduce a method for analysing a text
 without a parameter (e.g.\ k in KNN). In fact, we consider all
-the possibilities of parameters. Moreover, we want to be able to
+the thresholds ranging from 0 to infinity. Moreover, we want to be able to
 find a meaningful correspondence between the computation and
 the text. We use persistent homology.
 
@@ -30,24 +30,29 @@ in different angles, the last paragraph echos to the beginning etc.).
 Translated in persistent homology,
 if a good essay is a topological space, it should have
 many holes (homology groups). For example,
-in Figure~\ref{apple}, the essay have a statement, and then some arguments,
-, finally a conclusion. 1 - 2 - 3 - 4 are linked by time order, 1 - 4 are linked because they are similar.
+in Figure~\ref{apple}, On the right, the essay have a statement, and then some arguments,
+finally a conclusion.
+On the left, each point represents a point
+1 - 2 - 3 - 4 are linked by time order, 1 - 4 are linked because they are similar (within certain range of distance).
 This hole means good argument. There are also filled triangles (2-simplices), those
 sentences form clusters, so they are filled instead of forming holes.
-(We are going to introduce how to build concretely simplicial complexes very soon.)
 
 \begin{figure}[H]
-  \centering
+  \begin{minipage}{0.80\textwidth}
   \input{apple.tex}
+  \end{minipage}
+  \begin{minipage}{0.19\textwidth}
+  $\cdots$I like apple. It is healthy. It is yummy. So I eat an apple every day.
+  $\cdots$
+  \end{minipage}
   \caption{There are 2 holes in this simplicial complex,
   one represented by the blue cycle and one by brown.
   Note that the brown cycle and the green cycle are homology equivalent, so they count as one.}
   \label{apple}
 \end{figure}
 
-If we only have one such graph, we will have to determine the similarity to link.
-However, different similarity bars can give different simplicial complexes and have
-different homology groups. Structure changes with scale, e.g.\ Figure~\ref{fig:scale}.
+If we only have one such graph, we will have to determine the similarity threshold to link.
+However, different thresholds can give different insights. Structure changes with scale, e.g.\ Figure~\ref{fig:scale}.
 So our approache will consider all the scales (whence ``persistent'' homology).
 
 \begin{figure}[H]
@@ -58,44 +63,22 @@ So our approache will consider all the scales (whence ``persistent'' homology).
 \end{figure}
 
 \begin{figure}[H]
-  \centering
-  \input{tda_diagram.tex}
-  \caption{Filtration gives persistence module gives decomposition gives barcodes}
-  \label{fig:tda_diagram}
-  \end{figure}
+\centering
+\input{filtration.tex}
+\caption{We continue linking and filling (e.g.\ triangles) when the $d$ increases; note that
+we may have multiple linkings and fillings to do within a same $d$ but we discretize these
+for the algorithm}
+\label{filtration}
+\end{figure}
 
-\paragraph{Similarity Filtration with Time Skeleton (SIFTS) \cite{Zhu_2013}}
+The algorithm is the following (for the exact version \ref{sifts}) :
 
-As in KNN we choose an embedding and a
-distance. Then we construct a filtration (a sequence of inclusions
-of simplical complexes) of Rips Complexes.
-
-\begin{definition}[Rips complex]
-  Given a symmetric matrix $M \in M_n(R^+)$, we define a filtration of Rips complexes
-  $$
-  (V_d := \{A \subset \llbracket 1, n\rrbracket :
-  \forall 1\le i<j\le n, M_{i, j} \le d\})_{d\ge 0}
-  $$
-\end{definition}
-\RM A simplex appears when the last appearance of the its faces happens.
-
-Given an essay, we split it to sentences in order. We embed each sentence by tf-idf.
-Then we construct our matrix $M$ by setting $M_{i, j} = 1-\cos(\theta_{i,j})~\text{(the cosine distance)}$
-where $\theta_{i, j}$ is the angle between the vectors embedded by the ith and jth sentences.
-Then we set $M_{i, i+1} = 0$ (this is where the ``time skeleton'' come from, the reason is
-to preserve the order of the essay). We obtain then
-a filtration of Rips complexes.
-In the filtration, what all this means is that,
-at index 0, we will have a skeleton from the first sentence to the last sentence,
-then we add simplexes with closer points then those with further points.
-
-After having the filtration, we count the ``number of holes'' of dimension 1
-that appears in the filtration (this is formally the \textbf{number of
-barcodes} of dimension 1 after we decompose the persistence module
-induced by the filtration c.f.\ Figure~\ref{fig:tda_diagram}).
-Note that if we just count the number of holes at each index for the filtration,
-it would be trivial and not useful, we have to be able to identity the holes
-throughout the filtration so that we don't count a hole twice.
+We vary $d$ from $0$ to $1$, for every $d$ we create a graph like Figure~\ref{apple}
+(points representing sentences are linked first in order in the essay,
+then we link sentences whose differences are lower than $d$,
+we fill triangles, tetrahedron, etc. as shown in Figure~\ref{filtration}) What we will get is
+$(V_d)_{0\le d\le 1}$, a filtration of graphes one included in another while $d$ increases.
+Then there are holes who appear and disappear, we count the number of total appearance of holes.
 
 We hope to show that this number of holes reflects the quality of arguments of an essay.
 
@@ -109,12 +92,12 @@ data source (more precisely, the essay set 2, which is discoursive) :
 \includegraphics[width=8cm]{pdessay.png}
 \end{minipage}
 \begin{minipage}{0.49\linewidth}
-In @DATE1's world, there are many things found offensive.  Everyone has their own opinion on what is offensive and what is not. Many parents are becoming upset because they think their children are viewing things that they should not.  Other people are upset because they think the libraries are offending their culture or way of life.  This is even taken to the extreme where people want censhorship on libraries to avoid this, which is wrong.     Some people are becoming concerned about the materials in libraries.  They find these things to be offensive.  Everyone is entitled to their own opinion, but there really is nothing anyone can do if someone is offended.  The world is a public place and everywhere we go, something might be found offensive.  The library is a place for study.  It is never intended to offend someone, or bring bad to the world.  It is simply a place to inform, and if someone is offended by what they see, they should stay away from the library.     I have been to the library many times, none of which have I ever seen anything offensive.  Everything I have ever witnessed at the library is for learning and research...
+In @DATE1's world, there are many things found offensive.  Everyone has their own opinion on what is offensive and what is not. Many parents are becoming upset because they think their children are viewing things that they should not.  Other people are upset because they think the libraries are offending their culture or way of life.  This is even taken to the extreme where people want censhorship on libraries to avoid this, which is wrong.     Some people are becoming concerned about the materials in libraries...($\sim$450 words)
 \end{minipage}
-\caption{The persistence diagram of an essay of grade 4/6 : A point $(x, y)$ in this diagram corresponds to
-a interval module of extremities $x, y$ in the homology of certain degree.
-We have many blue points meaning many holes in dim 1, one red point meaning
-one homology group of dim 1
+\caption{The persistence diagram of an essay of grade 4/6 : A blue point $(x, y)$ in this diagram means
+that there is a hole appears at $d=x$ and disappears at $d=y$.
+One red point meaning there is only one connected component the whole time,
+because we link all the sentences by order in the essay.
 }
 \label{fig:pd}
 \end{figure}
@@ -125,7 +108,7 @@ one homology group of dim 1
 \begin{tikzpicture}
   \begin{axis}[
     xlabel={Grades},
-    ylabel={Average of number of barcodes dim 1},
+    ylabel={Average of number of holes},
     grid=both,
     xmin=0,
     ymin=0,
@@ -147,11 +130,11 @@ one homology group of dim 1
     };
   \end{axis}
 \end{tikzpicture}
-\caption{Number of barcodes increases as grade increases}
+\caption{Number of holes increases as grade increases}
 \label{fig:ds}
 \end{figure}
 
-Those are some discoursive essays on the topic of offense/censorship. We first inspect
+Those are some discoursive essays on the topic of offense/censorship graded 1-6. We first inspect
 an essay with grade 4/6 as an example Figure~\ref{fig:pd}. Then we show
 the average of number of holes for each grade (1-6)
 as well as the average of number of barcodes for each grade (Figure~\ref{fig:ds}).
@@ -190,7 +173,10 @@ In conclusion, while in Figure~\ref{fig:ads} we have enough essays as example wi
 the method(division) is not rigorously convincing, and in Figure~\ref{tab:gar} we don't
 have enough essays for each range though the method is solid, with them combined,
 we are confident that the number of barcodes of dim 1 is a good mesure of the quality of
-argument structure of an essay.
+argument structure of an essay. While we changed our task for applying
+this topological representation of text, this task can not be achieved by
+KNN or Naive Bayes either, because they would both totally ignore
+the structure of an essay.
 
 \paragraph{Further} We may provision studying the identification of type
 of arguments (or in previous case, type of comments) by exploiting persistent homology structure,
@@ -281,6 +267,12 @@ we may link the points in the set to form a simplicial complex.
 The way in which we link the points change our view of the underlying structure.
 The scale matters Figure~\ref{fig:scale}.
 
+\begin{figure}[H]
+  \centering
+  \input{tda_diagram.tex}
+  \caption{Filtration gives persistence module gives decomposition gives barcodes}
+  \label{fig:tda_diagram}
+\end{figure}
 
 \begin{definition}[Filtration]
   A filtration over $T$ is a family $\F = (F_t)_{t\in T}$ of increasing topological spaces:
@@ -294,7 +286,7 @@ The scale matters Figure~\ref{fig:scale}.
   endowed with linear application $v_t^{t^{\prime}}: V_t \rightarrow V_{t^{\prime}}$ induced by
   a filtration by being applied $H_k$ (e.g.\ Figure~\ref{fig:tda_diagram}).
 
-  $\I_{[l, r)}$(or $\I_{[l, r]}$ etc.) is an interval module with $T = [l, r)$,
+  $\I_{[l, r)}$(the interval can be open/close at 2 ends) is an interval module with $T = [l, r)$,
   $(V_t)_t = (\K)_t$, $(v^{t'}_t) = (\id)$.
 \end{definition}
 
@@ -355,6 +347,36 @@ such base a posteriori in this way).
 So the pairing is right.
 
 \end{proof}
+
+\subsubsection{Similarity Filtration with Time Skeleton (SIFTS) \cite{Zhu_2013}}
+\label{sifts}
+As in KNN we choose an embedding and a
+distance. Then we construct a filtration of Rips Complexes.
+
+\begin{definition}[Rips complex]
+  Given a symmetric matrix $M \in M_n(R^+)$, we define a filtration of Rips complexes
+  $$
+  (V_d := \{A \subset \llbracket 1, n\rrbracket :
+  \forall 1\le i<j\le n, M_{i, j} \le d\})_{d\ge 0}
+  $$
+\end{definition}
+\RM A simplex appears when the last appearance of the its faces happens.
+
+Given an essay, we split it to sentences in order. We embed each sentence by tf-idf.
+Then we construct our matrix $M$ by setting $M_{i, j} = 1-\cos(\theta_{i,j})~\text{(the cosine distance)}$
+where $\theta_{i, j}$ is the angle between the vectors embedded by the ith and jth sentences.
+Then we set $M_{i, i+1} = 0$ (whence ``time skeleton'', the reason is
+to preserve the order of the essay). We obtain then
+a filtration of Rips complexes.
+In the filtration, what all this means is that,
+at index 0, we will have a skeleton from the first sentence to the last sentence,
+then we add simplexes with closer points then those with further points.
+
+Then we decompose persistence module induced by the filtration in dim 1,
+the number of interval modules is what we called earlier the number of holes.
+Note that if we just count the number of holes at each index for the filtration,
+it would be trivial and not useful, we have to be able to identity the holes
+throughout the filtration so that we don't count a hole twice.
 
 \subsubsection{Stability theorem}
 
