@@ -58,31 +58,31 @@
 \tableofcontents
 \newpage
 \section{Introduction - Motivation}
+We were given several datasets from the website \textit{https://www.trictrac.net/}, which sells a variety of board games. This website collects data for every article, such as reviews and grades posted by the users. Our task was to treat and analyze this data to gain valuable insights from it. One purpose was to classify these reviews and predict the sentiment (positive or negative).
 
-We were given several datasets from the website \textit{https://www.trictrac.net/} which sells a variety of board games. This website collects data for every article, such as reviews and grades posted by the users. 
-
-Our task was to treat and analyze this data to try to gain information from it. One purpose was to classify these reviews and being able to predict the sentiment of review (positive or negative). 
-
-This is a real-world application since the company could automatically gain insight on products by correlating words with grades.
-The utilization of word vector representation and dimensionality reduction is useful in establishing meaningful associations between words and the sentiment expressed in reviews. The company could explore the represented space to find trends in what people like or dislike, and therefore potentially increasing sales.
+This is a real-world application as the company could automatically gain insight on products by correlating words with grades. Utilizing word vector representation and dimensionality reduction helps establish meaningful associations between words and the sentiment expressed in reviews. By exploring the represented space, the company could identify trends in customer preferences, potentially increasing sales.
 
 \begin{figure}[H]
   \centering
-  \begin{minipage}[t]{0.49\linewidth}
+  \begin{minipage}[t]{0.8\linewidth}
     \centering
-    \includegraphics[width=\linewidth]{tric_trac_pic.png}
+    \includegraphics[width=0.8\linewidth]{tric_trac_pic.png}
     \caption{Tric Trac webpage}
-  \end{minipage}\hfill
-  \begin{minipage}[t]{0.49\linewidth}
+    \vspace{0.5cm}
+    \label{fig:tric_trac_webpage}
+  \end{minipage}
+  
+  \begin{minipage}[t]{0.8\linewidth}
     \centering
-    \includegraphics[width=\linewidth]{tric_trac_df.png}
+    \includegraphics[width=1.2\linewidth]{tric_trac_df.png}
     \caption{Tric Trac Dataframe}
+    \vspace{0.5cm}
+    \label{fig:tric_trac_dataframe}
   \end{minipage}
 \end{figure}
-The features X represent the \textit{comment} column and the target variable y is \textit{grade}.
 
-So, what valuable insights can be extracted from these reviews? How can we effectively capture and quantify the sentiments conveyed?
-The following report will highlight our methodology to uncover patterns, our data processing approaches and the potential of our findings.  
+The features X represent the \textit{comment} column, and the target variable y is \textit{grade}. In this report, we aim to uncover valuable insights from these reviews and effectively capture and quantify the sentiments conveyed. We will discuss our methodology, data processing approaches, and the potential of our findings.
+
 \newpage
 \section{Descriptive statistics of the \textit{grades} feature}
 
@@ -100,9 +100,9 @@ We are starting by looking at the grades data, since it will be the criterion to
   \caption{Grade distribution}
 \end{figure}
 
-On the histogram on the left plot, 
+On the histogram on the right plot, 
 we can notice that the majority of the grades are actually integers. Removing float numbers (or rounding to closest integer) could possibly simplify the model.
-On the histogram plot, we can notice that the majority of reviews are actually positive.
+On the left plot, we can notice that the majority of reviews are actually positive.
 
 It is cautious to already say it could introduce some challenges. Indeed, since grades are quite imbalanced, the model can become biased towards positive reviews. The model may tend to predict positive reviews more frequently, leading to lower accuracy for negative ones and an overall imbalance in predictions. Also, since there are fewer samples from negative reviews, the model may not have enough representative examples to learn the patterns and characteristics of the negative class.
 
@@ -235,24 +235,6 @@ $$
 We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
 distance tends to be the same to every pair of vectors when the dimension grows).
 
-\begin{figure}[H]
-\begin{tikzpicture}[scale=1.5]
-  % Coordinate system
-  \draw[->] (0,0) -- (3,0) node[right] {$x$};
-  \draw[->] (0,0) -- (0,2) node[above] {$y$};
-
-  % Vectors
-  \draw[->, red, thick] (0,0) -- (2.5,1.5) coordinate (v1) node[midway, below right] {$\mathbf{v}_1$};
-  \draw[->, blue, thick] (0,0) -- (1.5,2) coordinate (v2) node[midway, above left] {$\mathbf{v}_2$};
-
-  % Angle
-  % \pic [draw, <->, angle radius=15mm, angle eccentricity=1.2, "$\theta$"] {angle = v1--(0,0)--v2};
-
-  % Direct line
-  \draw[dashed] (v1) -- (v2) node[midway, above right] {Euclidean distance};
-\end{tikzpicture}
-\end{figure}
-
 \subsection{Naive Bayes}
 
 The Naive Bayes algorithm do not require text representations such as one-hot encoding. It instead utilizes count vectorization to represent documents. Count vectorization preserves the word frequencies, allowing the algorithm to consider the importance of words in expressing sentiment.
@@ -278,6 +260,27 @@ More precisely, we used Multinomial Naive Bayes for our task because it is suita
 \paragraph{Inconvenients} \begin{itemize}
 \item Estimated probability is often inaccurate because of the naive assumption
 \end{itemize}
+
+\subsection{Distances}
+
+Before introducing the k-nearest neighbors algorithm, it's important to understand first that the distances we use for the algorithms are vital. Indeed, different distances capture different aspects of similarity between points, leading to variations in the learned patterns and classification boundaries.
+
+We can use euclidean distance, or we can use the distance concerning
+only the angle between 2 vectors (so the `difference of lengths' of documents
+is ignored).
+
+$$
+\begin{aligned}
+&\text{(cosine similarity)}S(A, B) :=
+\cos (\theta)=\frac{A \cdot B}{\|A\|\|B\|}\\
+&\text{(cosine distance)}D(A, B) :=1-S(A, B)
+\end{aligned}
+$$
+
+We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
+distance tends to be the same to every pair of vectors when the dimension grows).
+
+By dividing by the magnitudes, we ensure that the cosine similarity is independent of the vector lengths and focuses solely on the angle and direction between the vectors. This normalization allows us to compare vectors of different lengths and still obtain meaningful similarity scores.
 
 \subsection{K-Nearest neighbours}
 \label{subset:KNN}
