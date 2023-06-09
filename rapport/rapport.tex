@@ -188,7 +188,8 @@ like Naive Bayes below. This being said, the tf-idf embedding gives vectors with
 which can be dilated to integers.
 
 tf-idf (term frequency - inverse document frequency) first considers
-the whole of a corpus, it assumes a term too frequent in the corpus has little
+the whole of a corpus\footnote{For the terminology, we call the set of comments a corpus,
+each comment a document, every word a term.}, it assumes a term too frequent in the corpus has little
 information. Then it considers the importance of a term in a document
 as the frequency of the term in this document times a scalar
 representing its information in the corpus.
@@ -220,31 +221,6 @@ gain memory and boost speed sometimes.
 
 \section{Classification}
 
-\subsection{Distances}
-
-We can use euclidean distance, or we can use the distance concerning
-only the angle between 2 vectors (so the `difference of lengths' of documents
-is ignored).
-
-\begin{minipage}{\textwidth}
-\begin{minipage}{0.49\textwidth}
-$$
-\begin{aligned}
-&\text{(cosine similarity)}S(u, v) :=
-\cos (\theta)=\frac{u \cdot v}{\|u\|\|v\|}\\
-&\text{(cosine distance)}D(u, v) :=1-S(u, v)
-\end{aligned}
-$$
-\end{minipage}
-\centering
-\begin{minipage}{0.49\textwidth}
-\input{dist.tex}
-\end{minipage}
-\end{minipage}
-
-We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
-distance tends to be the same to every pair of vectors when the dimension grows).
-
 \subsection{Naive Bayes}
 
 The Naive Bayes algorithm do not require text representations such as one-hot encoding. It instead utilizes count vectorization to represent documents. Count vectorization preserves the word frequencies, allowing the algorithm to consider the importance of words in expressing sentiment.
@@ -273,24 +249,31 @@ More precisely, we used Multinomial Naive Bayes for our task because it is suita
 
 \subsection{Distances}
 
-Before introducing the k-nearest neighbors algorithm, it's important to understand first that the distances we use for the algorithms are vital. Indeed, different distances capture different aspects of similarity between points, leading to variations in the learned patterns and classification boundaries.
+Before introducing the k-nearest neighbors algorithm,
+it is important to note first that the distances to mesure the similarities between documents we use for the algorithms are vital.
 
 We can use euclidean distance, or we can use the distance concerning
 only the angle between 2 vectors (so the `difference of lengths' of documents
 is ignored).
 
+\begin{minipage}{\textwidth}
+\begin{minipage}{0.49\textwidth}
 $$
 \begin{aligned}
-&\text{(cosine similarity)}S(A, B) :=
-\cos (\theta)=\frac{A \cdot B}{\|A\|\|B\|}\\
-&\text{(cosine distance)}D(A, B) :=1-S(A, B)
+&\text{(cosine similarity)}S(u, v) :=
+\cos (\theta)=\frac{u \cdot v}{\|u\|\|v\|}\\
+&\text{(cosine distance)}D(u, v) :=1-S(u, v)
 \end{aligned}
 $$
+\end{minipage}
+\centering
+\begin{minipage}{0.49\textwidth}
+\input{dist.tex}
+\end{minipage}
+\end{minipage}
 
 We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
 distance tends to be the same to every pair of vectors when the dimension grows).
-
-By dividing by the magnitudes, we ensure that the cosine similarity is independent of the vector lengths and focuses solely on the angle and direction between the vectors. This normalization allows us to compare vectors of different lengths and still obtain meaningful similarity scores.
 
 \subsection{K-Nearest neighbours}
 \label{subset:KNN}
@@ -537,11 +520,11 @@ Another challenge encountered is that it was not obvious at first how to apply p
 
 A common obstacle with NLP is that sentences are far from being perfect, even after preprocessing is applied. Sentiment classifiers can also struggle when encountering words or phrases that were not present in the training data, so that's why using word embeddings are useful to generalize to unknown terms. 
 
-\subsection{Lessons learned throughout the project}
+\subsection{Lessons learned}
 
 The importance of preprocessing is a first lesson we could remember from this project. Indeed, without preprocessing, making a mathematical representation of words does not make any sense since the word embedding space will have a very large dimension, thus making predictions almost impossible.
 
-Then, handling class imbalance. It is easy to classify reviews as positive when the majority of reviews in the training data are positive. Undersampling was a good solution to this problem (no it's not..). 
+Then, handling class imbalance. It is easy to classify reviews as positive when the majority of reviews in the training data are positive. Undersampling was a good solution to this problem (with the tradeoff that we lose some precision in prediction). 
 
 \subsection{Limitations and areas of improvement}
 
@@ -554,6 +537,12 @@ We could evaluate the ability of our model to generalize to reviews from other f
 Finally, the models we used to represent text data were not sequential for the most part, instead it focused on the words themselves. An option would be to use Deep Learning models such as recurrent neural networks (RNNs), long short-term memory (LSTM) networks, or transformer-based architectures (e.g., BERT, GPT). These models can capture complex linguistic patterns and contextual information. 
 
 \input{tda.tex}
+
+\section{Outro}
+
+Through out the project we learnt how text representation is important for computer to process natural language and different
+representations adapt to different tasks. Moreover we improved our ability to write a good report
+and present a project. All thanks to professor Olivier Schwander.
 
 \printbibliography
 
