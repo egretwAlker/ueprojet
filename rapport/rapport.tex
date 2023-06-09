@@ -192,7 +192,8 @@ the whole of a corpus\footnote{For the terminology, we call the set of comments 
 each comment a document, every word a term.}, it assumes a term too frequent in the corpus has little
 information. Then it considers the importance of a term in a document
 as the frequency of the term in this document times a scalar
-representing its information in the corpus.
+representing its information in the corpus. The idf is actually an estimation
+of Shannon information of a term.
 
 $$
 \begin{aligned}
