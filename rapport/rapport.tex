@@ -18,6 +18,7 @@
 \usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage{parskip}
+\usepackage{mdframed}
 \usepackage[margin=2cm]{geometry}
 \hypersetup{
     colorlinks=true,
@@ -225,13 +226,21 @@ We can use euclidean distance, or we can use the distance concerning
 only the angle between 2 vectors (so the `difference of lengths' of documents
 is ignored).
 
+\begin{minipage}{\textwidth}
+\begin{minipage}{0.49\textwidth}
 $$
 \begin{aligned}
-&\text{(cosine similarity)}S(A, B) :=
-\cos (\theta)=\frac{A \cdot B}{\|A\|\|B\|}\\
-&\text{(cosine distance)}D(A, B) :=1-S(A, B)
+&\text{(cosine similarity)}S(u, v) :=
+\cos (\theta)=\frac{u \cdot v}{\|u\|\|v\|}\\
+&\text{(cosine distance)}D(u, v) :=1-S(u, v)
 \end{aligned}
 $$
+\end{minipage}
+\centering
+\begin{minipage}{0.49\textwidth}
+\input{dist.tex}
+\end{minipage}
+\end{minipage}
 
 We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
 distance tends to be the same to every pair of vectors when the dimension grows).
