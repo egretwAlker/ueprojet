@@ -456,6 +456,21 @@ comment.
   \label{tab:KNN}
 \end{table}
 
+\begin{document}
+
+Another way to represent words like we saw earlier was by using the Bag of Words technique. In this paragraph, we chose to only say that the comment is positive if the game gets rated with a grade of strictly higher than 7. And so by applying the KNN algorithm on the data, we observe the following plot.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{accuracy_plot.png}
+  \caption{Accuracy vs. K}
+  \label{fig:accuracy}
+\end{figure}
+
+In our analysis using the K-nearest neighbors (KNN) algorithm, we found that the optimal value of K, which represents the number of nearest neighbors considered during classification, was determined to be 1. This implies that the algorithm predominantly relied on the closest single neighbor to make predictions. The decision to select a K value of 1 suggests that the classification of a comment as positive or negative was primarily influenced by the sentiment expressed in a single nearest neighbor comment. It is noteworthy that this outcome highlights the significance of individual comments in determining the sentiment of a given text, rather than considering a broader range of neighboring comments.
+
+\end{document}
+
 \subsection{Naive Bayes}
 
 \begin{table}[H]
@@ -509,6 +524,27 @@ We are diving into the training phase with looking at learning curves. This is g
 \end{figure}
 
 We can see that the training F1-score is a bit larger than the testing F1-score, which was expected since the model training is done on the training set. We can see that the validation F1-score keeps on decreasing until the end of the training. This means we should have probably trained it for longer. The recall is better, but using undersampling do not provide enough data for the validation score to be optimal in this case.
+
+\subsection{Word Representation Results Comparison}
+
+The table presented in Table \ref{tab:knn_accuracy} provides a comparison of the accuracy results obtained using different word representations and distance measurement techniques in the K-Nearest Neighbors (KNN) algorithm. The table consists of three rows representing the word representation methods: One Hot Encoding, Bag of Words (BoW), and TF-IDF. The columns represent the distance measurement techniques: Euclidean distance and Cosine distance. The table showcases the accuracy values achieved by applying KNN with each word representation and distance combination. It can be observed that KNN with BoW and Cosine distance yields the highest accuracy of 0.693, followed closely by KNN with One Hot Encoding and both Euclidean and Cosine distances. On the other hand, KNN with TF-IDF and Euclidean distance exhibits the lowest accuracy of 0.484. These results provide insights into the performance of different word representation methods and distance metrics in sentiment analysis tasks.
+
+\begin{table}[h]
+    \centering
+    \caption{KNN Accuracy Using Different Word Representation and Distance Measurement}
+    \label{tab:knn_accuracy}
+    \begin{tabular}{ccc}
+        \hline
+        \textbf{Word Representation} & \textbf{Euclidean Distance} & \textbf{Cosine Distance} \\
+        \hline
+        Bag of Words & 0.685 & 0.694 \\
+        TF-IDF & 0.484 & 0.710 \\
+        One hot encoding & 0.686 & 0.686 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Table \ref{tab:knn_accuracy} shows the accuracy results for the K-nearest neighbors algorithm using different word representation techniques and distance measurements.
 
 \section{Insights - Analysis}
 
