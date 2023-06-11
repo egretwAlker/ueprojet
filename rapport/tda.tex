@@ -1,13 +1,15 @@
 \section{Another type of representation, persistent homology}
 
+The problems with methodes above are: 1. Not considering the order/structure of sentences
+in a document; 2. having a parameter to determine which can not be optimal uniformly for
+every prediction. For the sentiment prediction, it is fine. So we change our task 
+where we actually need to solve these problems.
+
 In this section we introduce a method for analysing a text
 without a parameter (e.g.\ k in KNN). In fact, we consider all
 the thresholds ranging from 0 to infinity. Moreover, we want to be able to
 find a meaningful correspondence between the computation and
-the text. We use persistent homology.
-
-But for this matter, for simplicity and the reason of capacity
-of the author, we have to change our task.
+the structure of the text. We use persistent homology.
 
 This is a project report instead of a course note, so the importance
 is not on the details of the algorithm but rather the ideas and experiments.
@@ -22,7 +24,8 @@ Inherently, persistent homology is useful when it comes to 3d modeling.
 But in data analysis in general, it is also useful (e.g.\ analyse the
 performance of a basketball team and get a intuitive view of the team structure).
 
-Here we use the persistent homology to analyse essays and grading.
+Here we use the persistent homology to analyse essays and grading (specifically the
+richness of their argument structures).
 
 Roughly speaking, a better discoursive essay should have a
 richer writting structure, (a proposition should be discussed
@@ -306,7 +309,7 @@ The scale matters Figure~\ref{fig:scale}.
 \RM Intuitively, the way to decompose is beginning from where a cycle occurs
 and following the linear map until it diminishes and concluding an interval module;
 the multiset of pairs of extremities of the intervals obtained by decomposition is called the \textbf{barcodes}
-or the persistence diagram; to compute the decomposition, we do Gauss elimination (explained in the following).
+or the \textbf{persistence diagram}; to compute the decomposition, we do Gauss elimination (explained in the following).
 
 \subsubsection{Algorithm to calculate the persistence diagram}
 
