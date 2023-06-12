@@ -1,7 +1,7 @@
 \section{Another type of representation, persistent homology}
 
-The problems with methodes above are: 1. Not considering the order/structure of sentences
-in a document; 2. having a parameter to determine which can not be optimal uniformly for
+The problems with the methodes above are: 1. Not considering the order/structure of sentences
+in a document; 2. having a parameter (k in KNN) to determine which can not be optimal uniformly for
 every prediction. For the sentiment prediction, it is fine. So we change our task 
 where we actually need to solve these problems.
 
@@ -24,16 +24,14 @@ Inherently, persistent homology is useful when it comes to 3d modeling.
 But in data analysis in general, it is also useful (e.g.\ analyse the
 performance of a basketball team and get a intuitive view of the team structure).
 
-Here we use the persistent homology to analyse essays and grading (specifically the
+Here we use the persistent homology to analyse discoursive essays and grading (specifically the
 richness of their argument structures).
 
 Roughly speaking, a better discoursive essay should have a
 richer writting structure, (a proposition should be discussed
 in different angles, the last paragraph echos to the beginning etc.).
-Translated in persistent homology,
-if a good essay is a topological space, it should have
-many holes (homology groups). For example,
-in Figure~\ref{apple}, On the right, the essay have a statement, and then some arguments,
+For example,
+in Figure~\ref{apple}, on the right, the essay have a statement, and then some arguments,
 finally a conclusion.
 On the left, each point represents a sentence.
 1 - 2 - 3 - 4 are linked by time order, 1 - 4 are linked because they are similar (within certain range of distance).
