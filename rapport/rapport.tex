@@ -510,9 +510,10 @@ comment.
   \label{tab:KNN}
 \end{table}
 
-In our KNN, we used tf-idf representation and cosine distance. There are other alternatives like
-BoW representation and euclidean distance, but with reasons already mentioned above, these are no better alternatives.
-Here we do an experience to show that.
+\subsection{Comparison of different representations and distances}
+
+In our KNN, we used tf-idf representation and cosine distance for reasons already mentioned.
+Here we make some experimental justification.
 
 Another way to represent words like we saw earlier was by using the Bag of Words technique. In this paragraph, we chose to only say that the comment is positive if the game gets rated with a grade of strictly higher than 7. And so by applying the KNN algorithm on the data, we observe the following plot.
 
