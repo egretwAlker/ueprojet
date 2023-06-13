@@ -9,7 +9,6 @@
 \usepackage{adjustbox}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usetikzlibrary{angles, quotes}
 \usetikzlibrary{calc}
 \usepackage{pgfplots}
 \usepackage{minted}
@@ -18,7 +17,6 @@
 \usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage{parskip}
-\usepackage{mdframed}
 \usepackage[margin=2cm]{geometry}
 \hypersetup{
     colorlinks=true,
@@ -188,12 +186,10 @@ like Naive Bayes below. This being said, the tf-idf embedding gives vectors with
 which can be dilated to integers.
 
 tf-idf (term frequency - inverse document frequency) first considers
-the whole of a corpus\footnote{For the terminology, we call the set of comments a corpus,
-each comment a document, every word a term.}, it assumes a term too frequent in the corpus has little
+the whole of a corpus, it assumes a term too frequent in the corpus has little
 information. Then it considers the importance of a term in a document
 as the frequency of the term in this document times a scalar
-representing its information in the corpus. The idf is actually an estimation
-of Shannon information of a term.
+representing its information in the corpus.
 
 $$
 \begin{aligned}
@@ -276,6 +272,8 @@ $$
 We see that cosine distance is better in nlp : no curse of dimensionality (the euclidean
 distance tends to be the same to every pair of vectors when the dimension grows).
 
+By dividing by the magnitudes, we ensure that the cosine similarity is independent of the vector lengths and focuses solely on the angle and direction between the vectors. This normalization allows us to compare vectors of different lengths and still obtain meaningful similarity scores.
+
 \subsection{K-Nearest neighbours}
 \label{subset:KNN}
 
@@ -331,6 +329,60 @@ Finally, the metrics we used are standard classification metrics such as precisi
 Precision measures the accuracy of positive predictions. Recall measures the ability of the model to identify positive instances correctly. F1-score is a metric that combines precision and recall scores.
 
 \paragraph{On implementation} We enable to specify random seed to ensure reproductivity.
+
+\subsection{Naive Bayes}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ccccc}
+  \hline
+  Class & Precision & Recall & F1-Score & Support \\
+  \hline
+  False (negative comments) & 0.73 & 0.28 & 0.41 & 6801 \\
+  True (positive comments) & 0.89 & 0.98 & 0.93 & 39941 \\
+  \hline
+  Macro Avg & 0.81 & 0.63 & 0.67 & 46742 \\
+  Weighted Avg & 0.87 & 0.88 & 0.86 & 46742 \\
+  \hline
+  \multicolumn{5}{c}{Accuracy = 0.88} \\
+  \hline
+  \end{tabular}
+  \caption{Classification report with no undersampling}
+  \label{tab:KNN}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ccccc}
+  \hline
+  Class & Precision & Recall & F1-Score & Support \\
+  \hline
+  False (negative comments) & 0.35 & 0.89 & 0.50 & 6784 \\
+  True (positive comments) & 0.98 & 0.71 & 0.82 & 39958 \\
+  \hline
+  Macro Avg & 0.66 & 0.80 & 0.66 & 46742 \\
+  Weighted Avg & 0.88 & 0.74 & 0.78 & 46742 \\
+  \hline
+  \multicolumn{5}{c}{Accuracy = 0.74} \\
+  \hline
+  \end{tabular}
+  \caption{Classification report with undersampling}
+  \label{tab:classification_report}
+\end{table}
+
+We notice that without undersampling, the F1 score is very high for the positive class but it is low for the negative. The model is biased towards predicting positive sentiment, leading to a higher number of false negatives. 
+However, with undersampling, the F1-score is lower for the positive class but it as at least balanced with the negative class. As accuracy is not really relevant in the case of class imbalance, it is probably more appropriate to keep the second model with undersampling.
+
+We are diving into the training phase with looking at learning curves. This is giving us an idea on how well the model generalizes to testing data.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=7cm]{nb_start_learning_curves.png}
+  \caption{Learning curves for Multinomial NB with undersampling (with training size in thousands)}
+  \label{fig:image_label}
+\end{figure}
+
+We can see that the training F1-score is a bit larger than the testing F1-score, which was expected since the model training is done on the training set. We can see that the validation F1-score keeps on decreasing until the end of the training. This means we should have probably trained it for longer. The recall is better, but using undersampling do not provide enough data for the validation score to be optimal in this case.
 
 \subsection{K-Nearest neighbors}
 
@@ -456,59 +508,16 @@ comment.
   \label{tab:KNN}
 \end{table}
 
-\subsection{Naive Bayes}
+Another way to represent words like we saw earlier was by using the Bag of Words technique. In this paragraph, we chose to only say that the comment is positive if the game gets rated with a grade of strictly higher than 7. And so by applying the KNN algorithm on the data, we observe the following plot.
 
-\begin{table}[H]
+\begin{figure}[htbp]
   \centering
-  \begin{tabular}{ccccc}
-  \hline
-  Class & Precision & Recall & F1-Score & Support \\
-  \hline
-  False (negative comments) & 0.73 & 0.28 & 0.41 & 6801 \\
-  True (positive comments) & 0.89 & 0.98 & 0.93 & 39941 \\
-  \hline
-  Macro Avg & 0.81 & 0.63 & 0.67 & 46742 \\
-  Weighted Avg & 0.87 & 0.88 & 0.86 & 46742 \\
-  \hline
-  \multicolumn{5}{c}{Accuracy = 0.88} \\
-  \hline
-  \end{tabular}
-  \caption{Classification report with no undersampling}
-  \label{tab:KNN}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{ccccc}
-  \hline
-  Class & Precision & Recall & F1-Score & Support \\
-  \hline
-  False (negative comments) & 0.35 & 0.89 & 0.50 & 6784 \\
-  True (positive comments) & 0.98 & 0.71 & 0.82 & 39958 \\
-  \hline
-  Macro Avg & 0.66 & 0.80 & 0.66 & 46742 \\
-  Weighted Avg & 0.88 & 0.74 & 0.78 & 46742 \\
-  \hline
-  \multicolumn{5}{c}{Accuracy = 0.74} \\
-  \hline
-  \end{tabular}
-  \caption{Classification report with undersampling}
-  \label{tab:classification_report}
-\end{table}
-
-We notice that without undersampling, the F1 score is very high for the positive class but it is low for the negative. The model is biased towards predicting positive sentiment, leading to a higher number of false negatives. 
-However, with undersampling, the F1-score is lower for the positive class but it as at least balanced with the negative class. As accuracy is not really relevant in the case of class imbalance, it is probably more appropriate to keep the second model with undersampling.
-
-We are diving into the training phase with looking at learning curves. This is giving us an idea on how well the model generalizes to testing data.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[height=7cm]{nb_start_learning_curves.png}
-  \caption{Learning curves for Multinomial NB with undersampling (with training size in thousands)}
-  \label{fig:image_label}
+  \includegraphics[width=\textwidth]{accuracy_plot.png}
+  \caption{Accuracy vs. K}
+  \label{fig:accuracy}
 \end{figure}
 
-We can see that the training F1-score is a bit larger than the testing F1-score, which was expected since the model training is done on the training set. We can see that the validation F1-score keeps on decreasing until the end of the training. This means we should have probably trained it for longer. The recall is better, but using undersampling do not provide enough data for the validation score to be optimal in this case.
+In our analysis using the K-nearest neighbors (KNN) algorithm, we found that the optimal value of K, which represents the number of nearest neighbors considered during classification, was determined to be 1. This implies that the algorithm predominantly relied on the closest single neighbor to make predictions. The decision to select a K value of 1 suggests that the classification of a comment as positive or negative was primarily influenced by the sentiment expressed in a single nearest neighbor comment. It is noteworthy that this outcome highlights the significance of individual comments in determining the sentiment of a given text, rather than considering a broader range of neighboring comments.
 
 \section{Insights - Analysis}
 
@@ -521,11 +530,11 @@ Another challenge encountered is that it was not obvious at first how to apply p
 
 A common obstacle with NLP is that sentences are far from being perfect, even after preprocessing is applied. Sentiment classifiers can also struggle when encountering words or phrases that were not present in the training data, so that's why using word embeddings are useful to generalize to unknown terms. 
 
-\subsection{Lessons learned}
+\subsection{Lessons learned throughout the project}
 
 The importance of preprocessing is a first lesson we could remember from this project. Indeed, without preprocessing, making a mathematical representation of words does not make any sense since the word embedding space will have a very large dimension, thus making predictions almost impossible.
 
-Then, handling class imbalance. It is easy to classify reviews as positive when the majority of reviews in the training data are positive. Undersampling was a good solution to this problem (with the tradeoff that we lose some precision in prediction). 
+Then, handling class imbalance. It is easy to classify reviews as positive when the majority of reviews in the training data are positive. Undersampling was a good solution to this problem (no it's not..). 
 
 \subsection{Limitations and areas of improvement}
 
@@ -537,13 +546,7 @@ We could evaluate the ability of our model to generalize to reviews from other f
 
 Finally, the models we used to represent text data were not sequential for the most part, instead it focused on the words themselves. An option would be to use Deep Learning models such as recurrent neural networks (RNNs), long short-term memory (LSTM) networks, or transformer-based architectures (e.g., BERT, GPT). These models can capture complex linguistic patterns and contextual information. 
 
-\input{tda.tex}
-
-\section{Outro}
-
-Through out the project we learnt how text representation is important for computer to process natural language and different
-representations adapt to different tasks. Moreover we improved our ability to write a good report
-and present a project. All thanks to professor Olivier Schwander.
+\include{tda.tex}
 
 \printbibliography
 
