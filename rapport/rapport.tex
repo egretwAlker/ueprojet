@@ -54,7 +54,7 @@
 \DeclareMathOperator{\conv}{conv}
 \DeclareMathOperator{\id}{id}
 \title{Text Representation and Application}
-\author{SAMAHA Elio, MARIE Clément, XIA Tianxiang}
+\author{MARIE Clément, SAMAHA Elio, XIA Tianxiang}
 \begin{document}
 \maketitle
 \tableofcontents
@@ -524,12 +524,18 @@ Here we make some experimental justifications by trying out other different opti
   \textbf{Euclidean} & 0.6852 & 0.4837 & 0.6864 \\ \hline
   \textbf{Cosine} & 0.6940 & 0.7104 & 0.6864 \\ \hline
   \end{tabular}
+  \subcaption{The table consists of three columns representing the word representation methods: One Hot Encoding, Bag of Words (BoW), and tf-idf.
+  The rows represent the distance measurement techniques: Euclidean distance and cosine distance.
+  The table showcases the accuracy values achieved by applying KNN with each word representation and distance combination.
+  It can be observed that KNN with tf-idf and cosine distance yields the highest accuracy of 0.7104,
+  followed closely by KNN with BoW and cosine distance.
+  On the other hand, KNN with tf-idf and Euclidean distance exhibits the lowest accuracy of 0.484.}
   \end{minipage}
   \begin{minipage}{0.49\textwidth}
   \includegraphics[width=7cm]{accuracy_plot.png}
   \subcaption{Variation of accuracy with k (KNN, euclidean distance, BoW)}
   \end{minipage}
-  \caption{KNN with other options}
+  \caption{KNN with other options; here we chose to only classify a comment as positive if the game received a rating strictly higher than 7.}
   \label{otherknn}
 \end{figure}
 
