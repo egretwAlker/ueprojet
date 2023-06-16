@@ -510,21 +510,34 @@ comment.
   \label{tab:KNN}
 \end{table}
 
-\subsection{Comparison of different representations and distances}
+\subsection{KNN with other representations and distances}
 
-In our KNN, we used tf-idf representation and cosine distance for reasons already mentioned.
-Here we make some experimental justification.
-
-Another way to represent words like we saw earlier was by using the Bag of Words technique. In this paragraph, we chose to only say that the comment is positive if the game gets rated with a grade of strictly higher than 7. And so by applying the KNN algorithm on the data, we observe the following plot.
+In our KNN above, we used tf-idf representation and cosine distance for reasons already mentioned.
+Here we make some experimental justifications by trying out other different options.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=8cm]{accuracy_plot.png}
-  \caption{Accuracy vs. K, representation by BoW, euclidean distance}
-  \label{fig:accuracy}
+  \begin{minipage}{0.49\textwidth}
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+  & \textbf{BoW} & \textbf{tf-idf} & \textbf{One-hot} \\ \hline
+  \textbf{Euclidean} & 0.6852 & 0.4837 & 0.6864 \\ \hline
+  \textbf{Cosine} & 0.6940 & 0.7104 & 0.6864 \\ \hline
+  \end{tabular}
+  \end{minipage}
+  \begin{minipage}{0.49\textwidth}
+  \includegraphics[width=7cm]{accuracy_plot.png}
+  \subcaption{Variation of accuracy with k (KNN, euclidean distance, BoW)}
+  \end{minipage}
+  \caption{KNN with other options}
+  \label{otherknn}
 \end{figure}
 
-In our analysis using the K-nearest neighbors (KNN) algorithm, we found that the optimal value of K, which represents the number of nearest neighbors considered during classification, was determined to be 1. This implies that the algorithm predominantly relied on the closest single neighbor to make predictions. The decision to select a K value of 1 suggests that the classification of a comment as positive or negative was primarily influenced by the sentiment expressed in a single nearest neighbor comment. It is noteworthy that this outcome highlights the significance of individual comments in determining the sentiment of a given text, rather than considering a broader range of neighboring comments.
+Indeed that we see tf-idf combined with cosine distance works the best. Interestingly,
+as shown on the right in Figure~\ref{otherknn}, the result is the best when $k=1$.
+This is reasonable as it can be interpretated as : euclidean distance only have meaning when
+the distance is very small. (Every pair of points tend to have the same distance when the dimension
+increases, curse of dimensionality.)
 
 \section{Insights - Analysis}
 
